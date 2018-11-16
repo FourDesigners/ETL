@@ -12,6 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -32,7 +33,7 @@ public class Main {
     private static final String PATH_SOURCE_FILE = "Files/incidenti.csv";
     private static final String PATH_TEMP_FILE = "Files/temp.csv";
     private static final String PATH_DEST_FILE = "Files/new_incidenti.csv";
-    private static final String PATH_MISSINGS_FILE = "Files/mancanti.txt";
+    private static final String PATH_RESULT_FILE = "Files/risultato";
     private static final String SEPARATOR = ";";
     private static final int N_COLONNE = 55;
     
@@ -40,11 +41,19 @@ public class Main {
     public static void main(String[] args) throws IOException {
         int duplicati = 0;
         int errati = 0;
-        int mancanti = 0;
+        int accettati = 0;
         Set<Chiave> chiavi = new HashSet<>();
         Map<String, Set<String>> comuni = new HashMap<>();
         String[] newcampi = {"TOT_INC_NONMORTALI", "CONDUC_MASCHI", "VEIC_COINVOLTI_ALTRO"};
         String[] newcampi_values = {"", "", ""};
+        
+        Calendar cal = Calendar.getInstance();
+        String giorno = new Integer(cal.get(Calendar.DATE)).toString();
+        String mese = new Integer(cal.get(Calendar.MONTH)+1).toString();
+        String anno = new Integer(cal.get(Calendar.YEAR)).toString();
+        String timestamp = anno + "_" + mese + "_" + giorno;
+        System.out.println(PATH_RESULT_FILE + timestamp + ".txt");
+        PrintWriter outStream = new PrintWriter(new BufferedWriter(new FileWriter(PATH_RESULT_FILE + timestamp + ".txt")));
         
         fillMunicipalities(comuni, PATH_COMUNI_FILE);
         try{
@@ -72,6 +81,7 @@ public class Main {
                     record.verifica(comuni); //controllo consistenza del record
                     if(record.isCorrect()) {
                         if (!record.isPresent(chiavi)) { //controllo duplicati
+                            accettati++;
                             chiavi.add(new Chiave(campi[0], campi[2]));
                             out.print(campi[0]);
                             for(int i=1; i<campi.length; i++) {
@@ -91,22 +101,27 @@ public class Main {
                             duplicati++;
                         }
                     }else { //record inconsistente per qualche controllo non andato a buon fine
+                        //outStream.write(record.toString() + "\r\n");
                         System.out.println(record);
                         errati++;
                     }
                 }else { //record incoerente con il protocollo
                     record = new Record();
                     record.addError("Numero di colonne errato");
+                    //outStream.write(record.toString() + "\r\n");
                     System.out.println(record);
                 }
             }
             out.close();
             inputStream.close();
-            mancanti = findMissingRecords(PATH_DEST_FILE, PATH_TEMP_FILE, comuni); //controlla se ci sono righe mancanti
+            //mancanti = findMissingRecords2("Files/temp_demo.csv", "Files/new_incidenti_demo.csv", comuni); //controlla se ci sono righe mancanti
+            int mancanti = findMissingRecords(comuni, PATH_TEMP_FILE, PATH_DEST_FILE);
             update(PATH_TEMP_FILE, PATH_DEST_FILE); //aggiunge le nuove righe al file dest
-            System.out.println("Numero righe duplicate : " + duplicati);
-            System.out.println("Numero righe rifiutate : " + errati);
-            System.out.println("Numero righe mancanti : " + mancanti);
+            outStream.write("Numero righe accettate : " + accettati + "\r\n");
+            outStream.write("Numero righe duplicate : " + duplicati + "\r\n");
+            outStream.write("Numero righe rifiutate : " + errati + "\r\n");
+            outStream.write("Numero righe mancanti : " + mancanti + "\r\n");
+            outStream.close();
         }catch(FileNotFoundException e) {
             System.out.println("Non è stato trovato il file");
         }
@@ -159,7 +174,51 @@ public class Main {
         }
     }
     
-    private static int findMissingRecords(String finalFile, String tempFile, Map<String, Set<String>> provinceComuni) {
+    private static int findMissingRecords(Map<String, Set<String>> comuni, String tempFile, String destFile) {
+        int mancanti = 0;
+        try {
+            Map<String, Set<String>> annoComune = new HashMap<>();
+            Scanner inputStream = new Scanner(new File(tempFile));
+            while(inputStream.hasNextLine()) {
+                String riga = inputStream.nextLine();
+                String[] campi = riga.split(SEPARATOR);
+                if(!annoComune.containsKey(campi[0])) {
+                    annoComune.put(campi[0], new HashSet<>());
+                    for(String provincia : comuni.keySet()) {
+                        annoComune.get(campi[0]).addAll(comuni.get(provincia));
+                    }
+                }
+                annoComune.get(campi[0]).remove(campi[2]);
+            }
+            inputStream.close();
+            
+            inputStream = new Scanner(new File(destFile));
+            while(inputStream.hasNextLine()) {
+                String riga = inputStream.nextLine();
+                String[] campi = riga.split(SEPARATOR);
+                if(!annoComune.containsKey(campi[0])) {
+                    annoComune.put(campi[0], new HashSet<>());
+                    for(String provincia : comuni.keySet()) {
+                        annoComune.get(campi[0]).addAll(comuni.get(provincia));
+                    }
+                }
+                annoComune.get(campi[0]).remove(campi[2]);
+            }
+            inputStream.close();
+            
+            
+            for(String anno : annoComune.keySet()) {
+                mancanti += annoComune.get(anno).size();
+            }
+            
+        } catch (FileNotFoundException ex) {
+            //Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return mancanti;
+    }
+    
+    /*
+    private static int findMissingRecords2(String finalFile, String tempFile, Map<String, Set<String>> provinceComuni) {
         Scanner inputStream;
         String riga;
         String[] campi;
@@ -233,6 +292,8 @@ public class Main {
             System.out.println("Impossibile aprire il file per scrivere i record mancanti");
         }
         
+        System.out.println(counter);
         return counter;
     }
+    */
 }
