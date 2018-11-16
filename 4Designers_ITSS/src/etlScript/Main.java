@@ -42,6 +42,7 @@ public class Main {
         try{
             Scanner inputStream = new Scanner(new File(PATH_SOURCE_FILE));
             String riga = inputStream.nextLine();
+            //controlla che il file TEMP non esista già e poi crea la prima riga (di intestazione)
             if(!new File(PATH_DEST_FILE).exists()) {
                 PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(PATH_DEST_FILE)));
                 out.println(riga);
@@ -54,25 +55,25 @@ public class Main {
                 riga = inputStream.nextLine();
                 String[] campi = riga.split(SEPARATOR);
                 Record record;
-                if (campi.length == N_COLONNE) {
+                if (campi.length == N_COLONNE) { //controllo coerenza con il protocollo
                     record = Record.create(campi);
-                    record.verifica(comuni);
+                    record.verifica(comuni); //controllo consistenza del record
                     if(record.isCorrect()) {
-                        if (!record.isPresent(chiavi)) {
+                        if (!record.isPresent(chiavi)) { //controllo duplicati
                             chiavi.add(new Chiave(campi[0], campi[2]));
-                            // Verificare righe mancanti
+                            //TODO: Verificare righe mancanti
                             out.print(campi[0]);
                             for(int i=1; i<campi.length; i++) {
                                 out.print(SEPARATOR + campi[i]);
                             }
                             out.println();
-                        }else {
+                        }else { //la riga analizzata è un duplicato
                             duplicati++;
                         }
-                    }else {
+                    }else { //record inconsistente per qualche controllo non andato a buon fine
                         System.out.println(record);
                     }
-                }else {
+                }else { //record incoerente con il protocollo
                     record = new Record();
                     record.addError("Numero di colonne errato");
                     System.out.println(record);
@@ -80,7 +81,7 @@ public class Main {
             }
             out.close();
             inputStream.close();
-            update(PATH_TEMP_FILE, PATH_DEST_FILE);
+            update(PATH_TEMP_FILE, PATH_DEST_FILE); //aggiunge le nuove colonne
             System.out.println("Numero righe duplicate : " + duplicati);
         }catch(FileNotFoundException e) {
             System.out.println("Non è stato trovato il file");
@@ -90,6 +91,7 @@ public class Main {
     @SuppressWarnings("ConvertToTryWithResources")
     private static void update(String source, String dest) throws FileNotFoundException, IOException {
         Scanner inputStream = new Scanner(new File(source));
+        //TODO: aggiungere le nuove colonne
         FileWriter fw = new FileWriter(dest, true);
         while (inputStream.hasNextLine()) {
             String riga = inputStream.nextLine();
