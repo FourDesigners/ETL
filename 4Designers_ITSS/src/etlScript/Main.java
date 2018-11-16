@@ -219,7 +219,6 @@ public class Main {
                 if(!new File(PATH_DEST_FILE).exists()) 
                     out = new PrintWriter(new BufferedWriter(new FileWriter(PATH_MISSINGS_FILE)));
                 else out = new PrintWriter(new BufferedWriter(new FileWriter(PATH_MISSINGS_FILE, true)));
-                System.out.println("Comuni mancanti= " + counter);
                 if(comuniCopia.isEmpty())
                     out.println("Sono stati inseriti tutti i dati per ogni comune.");
                 else {
