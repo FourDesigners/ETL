@@ -218,7 +218,7 @@ public class Main {
     }
     
     /*
-    private static int findMissingRecords2(String finalFile, String tempFile, Map<String, Set<String>> provinceComuni) {
+    private static int findMissingRecords(String finalFile, String tempFile, Map<String, Set<String>> provinceComuni) {
         Scanner inputStream;
         String riga;
         String[] campi;
@@ -254,26 +254,35 @@ public class Main {
             while(anniItr.hasNext()) {
                 //prendo l'anno che sto analizzando
                 int annoAnalizzato = anniItr.next();
+                
+                System.out.println("annoAnalizzato= " + annoAnalizzato);
+                
                 ArrayList<String> comuniCopia = new ArrayList<String>(comuni);
                 //elimino da comuniCopia i comuni che ho trovato nel file temp
                 inputStream = new Scanner(new File(tempFile));
                 while(inputStream.hasNextLine()) {
                     riga = inputStream.nextLine();
                     campi = riga.split(SEPARATOR);
-                    if(comuniCopia.contains(campi[2]))
+                    if(Integer.parseInt(campi[0]) == annoAnalizzato)
                         comuniCopia.remove(campi[2]);
                 }
                 inputStream.close();
+                
+                System.out.println("comuni mancanti dopo aver analizzato il file temp= " + comuniCopia.size());
+                
                 //elimino da comuniCopia i comuni che ho trovato nel file final
                 inputStream = new Scanner(new File(finalFile));
                 riga = inputStream.nextLine(); //salto la prima riga
                 while(inputStream.hasNextLine()) {
                     riga = inputStream.nextLine();
                     campi = riga.split(SEPARATOR);
-                    if(comuniCopia.contains(campi[2]))
+                    if(Integer.parseInt(campi[0]) == annoAnalizzato)
                         comuniCopia.remove(campi[2]);
                 }
                 inputStream.close();
+                
+                System.out.println("comuni mancanti dopo aver analizzato il file dest= " + comuniCopia.size());
+                
                 counter = counter + comuniCopia.size();
                 if(!new File(PATH_DEST_FILE).exists()) 
                     out = new PrintWriter(new BufferedWriter(new FileWriter(PATH_MISSINGS_FILE)));
@@ -292,7 +301,6 @@ public class Main {
             System.out.println("Impossibile aprire il file per scrivere i record mancanti");
         }
         
-        System.out.println(counter);
         return counter;
     }
     */
