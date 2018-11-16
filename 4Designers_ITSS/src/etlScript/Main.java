@@ -118,7 +118,7 @@ public class Main {
         FileWriter fw = new FileWriter(dest, true);
         while (inputStream.hasNextLine()) {
             String riga = inputStream.nextLine();
-            fw.write(riga + "\n");
+            fw.write(riga + "\r\n");
         }
         fw.close();
         inputStream.close();
