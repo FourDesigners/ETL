@@ -40,6 +40,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         int duplicati = 0;
         int errati = 0;
+        int mancanti = 0;
         Set<Chiave> chiavi = new HashSet<>();
         Map<String, Set<String>> comuni = new HashMap<>();
         String[] newcampi = {"TOT_INC_NONMORTALI", "CONDUC_MASCHI", "VEIC_COINVOLTI_ALTRO"};
@@ -101,10 +102,11 @@ public class Main {
             }
             out.close();
             inputStream.close();
-            //findMissingRecords(PATH_DEST_FILE, PATH_TEMP_FILE, comuni); //controlla se ci sono righe mancanti
+            mancanti = findMissingRecords(PATH_DEST_FILE, PATH_TEMP_FILE, comuni); //controlla se ci sono righe mancanti
             update(PATH_TEMP_FILE, PATH_DEST_FILE); //aggiunge le nuove righe al file dest
             System.out.println("Numero righe duplicate : " + duplicati);
             System.out.println("Numero righe rifiutate : " + errati);
+            System.out.println("Numero righe mancanti : " + mancanti);
         }catch(FileNotFoundException e) {
             System.out.println("Non è stato trovato il file");
         }
@@ -162,6 +164,7 @@ public class Main {
         String riga;
         String[] campi;
         PrintWriter out;
+        int counter = 0;
         
         try {
             //creo la lista degli anni
@@ -212,10 +215,11 @@ public class Main {
                         comuniCopia.remove(campi[2]);
                 }
                 inputStream.close();
-                //System.out.println("Per l'anno " + annoAnalizzato + " mancano i seguenti comuni: " + comuniCopia);
+                counter = counter + comuniCopia.size();
                 if(!new File(PATH_DEST_FILE).exists()) 
                     out = new PrintWriter(new BufferedWriter(new FileWriter(PATH_MISSINGS_FILE)));
                 else out = new PrintWriter(new BufferedWriter(new FileWriter(PATH_MISSINGS_FILE, true)));
+                System.out.println("Comuni mancanti= " + counter);
                 if(comuniCopia.isEmpty())
                     out.println("Sono stati inseriti tutti i dati per ogni comune.");
                 else {
@@ -230,6 +234,6 @@ public class Main {
             System.out.println("Impossibile aprire il file per scrivere i record mancanti");
         }
         
-        return 0;
+        return counter;
     }
 }
