@@ -39,8 +39,11 @@ public class Main {
     @SuppressWarnings("ConvertToTryWithResources")
     public static void main(String[] args) throws IOException {
         int duplicati = 0;
+        int errati = 0;
         Set<Chiave> chiavi = new HashSet<>();
         Map<String, Set<String>> comuni = new HashMap<>();
+        String[] newcampi = {"TOT_INC_NONMORTALI", "CONDUC_MASCHI", "VEIC_COINVOLTI_ALTRO"};
+        String[] newcampi_values = {"", "", ""};
         
         fillMunicipalities(comuni, PATH_COMUNI_FILE);
         try{
@@ -49,7 +52,11 @@ public class Main {
             //controlla che il file TEMP non esista già e poi crea la prima riga (di intestazione)
             if(!new File(PATH_DEST_FILE).exists()) {
                 PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(PATH_DEST_FILE)));
-                out.println(riga);
+                out.print(riga);
+                for(String s : newcampi) {
+                    out.print(SEPARATOR + s);
+                }
+                out.println();
                 out.close();
             }else {
                 fillKeys(chiavi, PATH_DEST_FILE);
@@ -69,12 +76,22 @@ public class Main {
                             for(int i=1; i<campi.length; i++) {
                                 out.print(SEPARATOR + campi[i]);
                             }
+                            Integer tot_incidenti_nonmortali = Integer.parseInt(campi[3])-Integer.parseInt(campi[4]);
+                            Integer conduc_maschi = Integer.parseInt(campi[9])-Integer.parseInt(campi[10]);
+                            Integer veic_coinvolti_altro = Integer.parseInt(campi[7])-Integer.parseInt(campi[52])-Integer.parseInt(campi[53])-Integer.parseInt(campi[54]);
+                            newcampi_values[0] = tot_incidenti_nonmortali.toString();
+                            newcampi_values[1] = conduc_maschi.toString();
+                            newcampi_values[2] = veic_coinvolti_altro.toString();
+                            for(String s : newcampi_values) {
+                                out.print(SEPARATOR + s);
+                            }
                             out.println();
                         }else { //la riga analizzata è un duplicato
                             duplicati++;
                         }
                     }else { //record inconsistente per qualche controllo non andato a buon fine
                         System.out.println(record);
+                        errati++;
                     }
                 }else { //record incoerente con il protocollo
                     record = new Record();
@@ -84,9 +101,10 @@ public class Main {
             }
             out.close();
             inputStream.close();
-            findMissingRecords(PATH_DEST_FILE, PATH_TEMP_FILE, comuni); //controlla se ci sono righe mancanti
+            //findMissingRecords(PATH_DEST_FILE, PATH_TEMP_FILE, comuni); //controlla se ci sono righe mancanti
             update(PATH_TEMP_FILE, PATH_DEST_FILE); //aggiunge le nuove righe al file dest
             System.out.println("Numero righe duplicate : " + duplicati);
+            System.out.println("Numero righe rifiutate : " + errati);
         }catch(FileNotFoundException e) {
             System.out.println("Non è stato trovato il file");
         }
@@ -95,7 +113,6 @@ public class Main {
     @SuppressWarnings("ConvertToTryWithResources")
     private static void update(String source, String dest) throws FileNotFoundException, IOException {
         Scanner inputStream = new Scanner(new File(source));
-        //TODO: aggiungere le nuove colonne
         FileWriter fw = new FileWriter(dest, true);
         while (inputStream.hasNextLine()) {
             String riga = inputStream.nextLine();

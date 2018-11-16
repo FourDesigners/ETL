@@ -5,11 +5,9 @@
  */
 package etlScript;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.Set;
 
 
@@ -20,9 +18,9 @@ import java.util.Set;
 public class Record {
     private static final String ANNO_INIZIALE = "2000";
     private static final String ANNO_FINALE = "2099";
-    private static final String PATH_SOURCE_FILE = "Files/incidenti_demo.csv";
+    private static final String PATH_SOURCE_FILE = "Files/incidenti.csv";
     private static final String PATH_TEMP_FILE = "Files/temp.csv";
-    private static final String PATH_DEST_FILE = "Files/new_incidenti_demo.csv";
+    private static final String PATH_DEST_FILE = "Files/new_incidenti.csv";
     private static final String SEPARATOR = ";";
     private static int count = 2;
     private final int id;
@@ -448,7 +446,61 @@ public class Record {
         if (!corretto) {
             errori.add("Numero di velocipiedi errato");
         }
-        // Mancano i vincoli tra le variabili
+        
+        corretto = verificaIncidentiPerLuogo(incidentiTotali, incidentiStradeUrbane, incidentiStradeExtra, incidentiAutostrada);
+        if (!corretto) {
+            errori.add("Numero di incidenti inconsistente per luogo");
+        }      
+        
+        corretto = verificaIncidentiPerTipologia(incidentiTotali, incidentiMarcia, incidentiVeicoloPedone, incidentiIsolati);
+        if (!corretto) {
+            errori.add("Numero di incidenti inconsistente per tipologia");
+        } 
+        
+        corretto = verificaIncidentiPerGiorni(incidentiTotali, incidentiFeriali, incidentiWeekend);
+        if (!corretto) {
+            errori.add("Numero di incidenti inconsistente per giorni");
+        } 
+        
+        corretto = verificaIncidentiPerOrario(incidentiTotali, incidentiGiorno, incidentiNotte);
+        if (!corretto) {
+            errori.add("Numero di incidenti inconsistente per orario");
+        } 
+        
+        corretto = verificaIncidentiPerOreDiPunta(incidentiTotali, incidentiDa7_9, incidentiDa17_19);
+        if (!corretto) {
+            errori.add("Numero di incidenti inconsistente per orari di punta");
+        }
+        
+        corretto = verificaIncidentiPerMeteo(incidentiTotali, incidentiSereno, incidentiNebbia, incidentiPioggiaNeve);
+        if (!corretto) {
+            errori.add("Numero di incidenti inconsistente per meteo");
+        }
+        
+        corretto = verificaFeriti(feritiTotali, conducentiFeriti, passeggeriFeriti, pedoniFeriti);
+        if (!corretto) {
+            errori.add("Numero di feriti inconsistente");
+        }
+        
+        corretto = verificaMorti(mortiTotali, conducentiMortiDa0_14, conducentiMortiDa15_19, conducentiMortiDa20_64, conducentiMortiDa65_piu, passeggeriMorti, pedoniMorti);
+        if (!corretto) {
+            errori.add("Numero di feriti inconsistente");
+        }
+        
+        corretto = verificaVeicoliConConducente(veicoliConConducente, autovetture, autocarri, motocicli, velocipedi);
+        if (!corretto) {
+            errori.add("Numero di veicolo con conducente inconsistente");
+        }
+        
+        corretto = verificaConducentiTotaliPerAnni(conducentiTotali, conducentiDa0_14, conducentiDa15_19, conducentiDa20_64, conducentiDa65_piu);
+        if (!corretto) {
+            errori.add("Numero di conducenti totali inconsistente");
+        }
+        
+        corretto = verificaConducentiFeritiPerAnni(conducentiFeriti, conducentiFeritiDa0_14, conducentiFeritiDa15_19, conducentiFeritiDa20_64, conducentiFeritiDa65_piu);
+        if (!corretto) {
+            errori.add("Numero di conducenti feriti inconsistente");
+        }
     }
     
     public boolean isCorrect() {
@@ -710,5 +762,74 @@ public class Record {
     
     private static boolean verificaVelocipedi(String velocipedi) {
         return verificaNumero(velocipedi);
+    }
+
+    private static boolean verificaIncidentiPerTipologia(String incidentiTotali, String incidentiMarcia, String incidentiVeicoloPedone, String incidentiIsolati) {
+        return Integer.parseInt(incidentiTotali) == Integer.parseInt(incidentiMarcia) +
+                                                    Integer.parseInt(incidentiVeicoloPedone)  +
+                                                    Integer.parseInt(incidentiIsolati); 
+    }
+
+    private static boolean verificaIncidentiPerLuogo(String incidentiTotali, String incidentiStradeUrbane, String incidentiStradeExtra, String incidentiAutostrada) {
+        return Integer.parseInt(incidentiTotali) == Integer.parseInt(incidentiStradeUrbane) +
+                                                    Integer.parseInt(incidentiStradeExtra)  +
+                                                    Integer.parseInt(incidentiAutostrada);
+    }
+
+    private static boolean verificaIncidentiPerGiorni(String incidentiTotali, String incidentiFeriali, String incidentiWeekend) {
+        return Integer.parseInt(incidentiTotali) == Integer.parseInt(incidentiFeriali) +
+                                                    Integer.parseInt(incidentiWeekend);
+    }
+
+    private static boolean verificaIncidentiPerOrario(String incidentiTotali, String incidentiGiorno, String incidentiNotte) {
+        return Integer.parseInt(incidentiTotali) >= Integer.parseInt(incidentiGiorno) +
+                                                    Integer.parseInt(incidentiNotte);
+    }
+
+    private static boolean verificaIncidentiPerOreDiPunta(String incidentiTotali, String incidentiDa7_9, String incidentiDa17_19) {
+        return Integer.parseInt(incidentiTotali) >= Integer.parseInt(incidentiDa7_9) +
+                                                    Integer.parseInt(incidentiDa17_19);
+    }
+
+    private static boolean verificaIncidentiPerMeteo(String incidentiTotali, String incidentiSereno, String incidentiNebbia, String incidentiPioggiaNeve) {
+        return Integer.parseInt(incidentiTotali) >= Integer.parseInt(incidentiSereno) +
+                                                    Integer.parseInt(incidentiNebbia) +
+                                                    Integer.parseInt(incidentiPioggiaNeve);
+    }
+
+    private static boolean verificaFeriti(String feritiTotali, String conducentiFeriti, String passeggeriFeriti, String pedoniFeriti) {
+        return Integer.parseInt(feritiTotali) == Integer.parseInt(conducentiFeriti) +
+                                                    Integer.parseInt(passeggeriFeriti) +
+                                                    Integer.parseInt(pedoniFeriti);
+    }
+
+    private static boolean verificaMorti(String mortiTotali, String conducentiMortiDa0_14, String conducentiMortiDa15_19, String conducentiMortiDa20_64, String conducentiMortiDa65_piu, String passeggeriMorti, String pedoniMorti) {
+        return Integer.parseInt(mortiTotali) == Integer.parseInt(conducentiMortiDa0_14) +
+                                                Integer.parseInt(conducentiMortiDa15_19) +
+                                                Integer.parseInt(conducentiMortiDa20_64) +
+                                                Integer.parseInt(conducentiMortiDa65_piu) +
+                                                Integer.parseInt(passeggeriMorti) +
+                                                Integer.parseInt(pedoniMorti);
+    }
+
+    private static boolean verificaVeicoliConConducente(String veicoliConConducente, String autovetture, String autocarri, String motocicli, String velocipedi) {
+       return Integer.parseInt(veicoliConConducente) == Integer.parseInt(autovetture) +
+                                                        Integer.parseInt(autocarri) +
+                                                        Integer.parseInt(motocicli) +
+                                                        Integer.parseInt(velocipedi);
+    }
+
+    private static boolean verificaConducentiTotaliPerAnni(String conducentiTotali, String conducentiDa0_14, String conducentiDa15_19, String conducentiDa20_64, String conducentiDa65_piu) {
+        return Integer.parseInt(conducentiTotali) == Integer.parseInt(conducentiDa0_14) +
+                                                     Integer.parseInt(conducentiDa15_19) +
+                                                     Integer.parseInt(conducentiDa20_64) +
+                                                     Integer.parseInt(conducentiDa65_piu);
+    }
+
+    private static boolean verificaConducentiFeritiPerAnni(String conducentiFeriti, String conducentiFeritiDa0_14, String conducentiFeritiDa15_19, String conducentiFeritiDa20_64, String conducentiFeritiDa65_piu) {
+        return Integer.parseInt(conducentiFeriti) == Integer.parseInt(conducentiFeritiDa0_14) +
+                                                           Integer.parseInt(conducentiFeritiDa15_19) +
+                                                           Integer.parseInt(conducentiFeritiDa20_64) +
+                                                           Integer.parseInt(conducentiFeritiDa65_piu);
     }
 }
