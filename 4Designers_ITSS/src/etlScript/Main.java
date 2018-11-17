@@ -11,15 +11,12 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -130,6 +127,7 @@ public class Main {
             outStream.write("Numero righe rifiutate : " + errati + "\r\n");
             outStream.write("Numero righe mancanti : " + mancanti + "\r\n");
             outStream.close();
+            System.out.println("PROCEDURA ETL " + timestamp + " TERMINATA");
         }catch(FileNotFoundException e) {
             System.out.println("Non è stato trovato il file");
         }
@@ -218,9 +216,9 @@ public class Main {
             for(String anno : annoComune.keySet()) {
                 mancanti += annoComune.get(anno).size();
                 out.write("ANNO " + anno + " : {");
-                for(String comune : annoComune.get(anno)) {
+                annoComune.get(anno).forEach((comune) -> {
                     out.write("[" + comune + "]");
-                }
+                });
                 out.write("}\r\n");
             }
             out.write("\r\n");

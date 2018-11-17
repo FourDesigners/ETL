@@ -765,13 +765,13 @@ public class Record {
     }
 
     private static boolean verificaIncidentiPerTipologia(String incidentiTotali, String incidentiMarcia, String incidentiVeicoloPedone, String incidentiIsolati) {
-        return Integer.parseInt(incidentiTotali) == Integer.parseInt(incidentiMarcia) +
+        return Integer.parseInt(incidentiTotali) >= Integer.parseInt(incidentiMarcia) +
                                                     Integer.parseInt(incidentiVeicoloPedone)  +
                                                     Integer.parseInt(incidentiIsolati); 
     }
 
     private static boolean verificaIncidentiPerLuogo(String incidentiTotali, String incidentiStradeUrbane, String incidentiStradeExtra, String incidentiAutostrada) {
-        return Integer.parseInt(incidentiTotali) == Integer.parseInt(incidentiStradeUrbane) +
+        return Integer.parseInt(incidentiTotali) >= Integer.parseInt(incidentiStradeUrbane) +
                                                     Integer.parseInt(incidentiStradeExtra)  +
                                                     Integer.parseInt(incidentiAutostrada);
     }
@@ -798,13 +798,13 @@ public class Record {
     }
 
     private static boolean verificaFeriti(String feritiTotali, String conducentiFeriti, String passeggeriFeriti, String pedoniFeriti) {
-        return Integer.parseInt(feritiTotali) == Integer.parseInt(conducentiFeriti) +
+        return Integer.parseInt(feritiTotali) >= Integer.parseInt(conducentiFeriti) +
                                                     Integer.parseInt(passeggeriFeriti) +
                                                     Integer.parseInt(pedoniFeriti);
     }
 
     private static boolean verificaMorti(String mortiTotali, String conducentiMortiDa0_14, String conducentiMortiDa15_19, String conducentiMortiDa20_64, String conducentiMortiDa65_piu, String passeggeriMorti, String pedoniMorti) {
-        return Integer.parseInt(mortiTotali) == Integer.parseInt(conducentiMortiDa0_14) +
+        return Integer.parseInt(mortiTotali) >= Integer.parseInt(conducentiMortiDa0_14) +
                                                 Integer.parseInt(conducentiMortiDa15_19) +
                                                 Integer.parseInt(conducentiMortiDa20_64) +
                                                 Integer.parseInt(conducentiMortiDa65_piu) +
@@ -813,21 +813,21 @@ public class Record {
     }
 
     private static boolean verificaVeicoliConConducente(String veicoliConConducente, String autovetture, String autocarri, String motocicli, String velocipedi) {
-       return Integer.parseInt(veicoliConConducente) == Integer.parseInt(autovetture) +
+       return Integer.parseInt(veicoliConConducente) >= Integer.parseInt(autovetture) +
                                                         Integer.parseInt(autocarri) +
                                                         Integer.parseInt(motocicli) +
                                                         Integer.parseInt(velocipedi);
     }
 
     private static boolean verificaConducentiTotaliPerAnni(String conducentiTotali, String conducentiDa0_14, String conducentiDa15_19, String conducentiDa20_64, String conducentiDa65_piu) {
-        return Integer.parseInt(conducentiTotali) == Integer.parseInt(conducentiDa0_14) +
+        return Integer.parseInt(conducentiTotali) >= Integer.parseInt(conducentiDa0_14) +
                                                      Integer.parseInt(conducentiDa15_19) +
                                                      Integer.parseInt(conducentiDa20_64) +
                                                      Integer.parseInt(conducentiDa65_piu);
     }
 
     private static boolean verificaConducentiFeritiPerAnni(String conducentiFeriti, String conducentiFeritiDa0_14, String conducentiFeritiDa15_19, String conducentiFeritiDa20_64, String conducentiFeritiDa65_piu) {
-        return Integer.parseInt(conducentiFeriti) == Integer.parseInt(conducentiFeritiDa0_14) +
+        return Integer.parseInt(conducentiFeriti) >= Integer.parseInt(conducentiFeritiDa0_14) +
                                                            Integer.parseInt(conducentiFeritiDa15_19) +
                                                            Integer.parseInt(conducentiFeritiDa20_64) +
                                                            Integer.parseInt(conducentiFeritiDa65_piu);
