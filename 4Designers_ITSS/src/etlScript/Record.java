@@ -80,10 +80,12 @@ public class Record {
     private String motocicli;
     private String velocipedi;
     private Set<String> errori;
+    private Set<String> warnings;
     
     public Record() {
         id = count++;
         errori = new HashSet<>();
+        warnings = new HashSet<>();
     }
     
     private Record(String annoIncidente, String prov, String comune, String incidentiTotali, String incidentiMortali,
@@ -449,57 +451,57 @@ public class Record {
         
         corretto = verificaIncidentiPerLuogo(incidentiTotali, incidentiStradeUrbane, incidentiStradeExtra, incidentiAutostrada);
         if (!corretto) {
-            errori.add("Numero di incidenti inconsistente per luogo");
+            warnings.add("Numero di incidenti inconsistente per luogo");
         }      
         
         corretto = verificaIncidentiPerTipologia(incidentiTotali, incidentiMarcia, incidentiVeicoloPedone, incidentiIsolati);
         if (!corretto) {
-            errori.add("Numero di incidenti inconsistente per tipologia");
+            warnings.add("Numero di incidenti inconsistente per tipologia");
         } 
         
         corretto = verificaIncidentiPerGiorni(incidentiTotali, incidentiFeriali, incidentiWeekend);
         if (!corretto) {
-            errori.add("Numero di incidenti inconsistente per giorni");
+            warnings.add("Numero di incidenti inconsistente per giorni");
         } 
         
         corretto = verificaIncidentiPerOrario(incidentiTotali, incidentiGiorno, incidentiNotte);
         if (!corretto) {
-            errori.add("Numero di incidenti inconsistente per orario");
+            warnings.add("Numero di incidenti inconsistente per orario");
         } 
         
         corretto = verificaIncidentiPerOreDiPunta(incidentiTotali, incidentiDa7_9, incidentiDa17_19);
         if (!corretto) {
-            errori.add("Numero di incidenti inconsistente per orari di punta");
+            warnings.add("Numero di incidenti inconsistente per orari di punta");
         }
         
         corretto = verificaIncidentiPerMeteo(incidentiTotali, incidentiSereno, incidentiNebbia, incidentiPioggiaNeve);
         if (!corretto) {
-            errori.add("Numero di incidenti inconsistente per meteo");
+            warnings.add("Numero di incidenti inconsistente per meteo");
         }
         
         corretto = verificaFeriti(feritiTotali, conducentiFeriti, passeggeriFeriti, pedoniFeriti);
         if (!corretto) {
-            errori.add("Numero di feriti inconsistente");
+            warnings.add("Numero di feriti inconsistente");
         }
         
         corretto = verificaMorti(mortiTotali, conducentiMortiDa0_14, conducentiMortiDa15_19, conducentiMortiDa20_64, conducentiMortiDa65_piu, passeggeriMorti, pedoniMorti);
         if (!corretto) {
-            errori.add("Numero di feriti inconsistente");
+            warnings.add("Numero di feriti inconsistente");
         }
         
         corretto = verificaVeicoliConConducente(veicoliConConducente, autovetture, autocarri, motocicli, velocipedi);
         if (!corretto) {
-            errori.add("Numero di veicolo con conducente inconsistente");
+            warnings.add("Numero di veicolo con conducente inconsistente");
         }
         
         corretto = verificaConducentiTotaliPerAnni(conducentiTotali, conducentiDa0_14, conducentiDa15_19, conducentiDa20_64, conducentiDa65_piu);
         if (!corretto) {
-            errori.add("Numero di conducenti totali inconsistente");
+            warnings.add("Numero di conducenti totali inconsistente");
         }
         
         corretto = verificaConducentiFeritiPerAnni(conducentiFeriti, conducentiFeritiDa0_14, conducentiFeritiDa15_19, conducentiFeritiDa20_64, conducentiFeritiDa65_piu);
         if (!corretto) {
-            errori.add("Numero di conducenti feriti inconsistente");
+            warnings.add("Numero di conducenti feriti inconsistente");
         }
     }
     
@@ -517,8 +519,9 @@ public class Record {
 
     @Override
     public String toString() {
-        return "Record{" + "riga=" + id + ", errori=" + errori + '}';
+        return "Record{" + "riga=" + id + ", errori=" + errori + ", warnings=" + warnings + '}';
     }
+    
     
     private static boolean verificaAnnoIncidente(String annoIncidente) {
         return annoIncidente.compareTo(ANNO_INIZIALE)>=0 && annoIncidente.compareTo(ANNO_FINALE)<=0;
