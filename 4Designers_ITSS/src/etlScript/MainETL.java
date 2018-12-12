@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  *
  * @author FourDesigners
  */
-public class Main {
+public class MainETL {
     private static final String PATH_COMUNI_FILE = "Files/comuni.csv";
     private static final String PATH_SOURCE_FILE = "Files/incidenti.csv";
     private static final String PATH_TEMP_FILE = "Files/temp.csv";
@@ -174,7 +174,7 @@ public class Main {
                 }
             }
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MainETL.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }
