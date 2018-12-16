@@ -5,25 +5,20 @@
  */
 package etlScript;
 
-
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
 
 /**
  *
  * @author FourDesigners
  */
 public class Record {
+
     private static final String ANNO_INIZIALE = "2000";
     private static final String ANNO_FINALE = "2099";
-    private static final String PATH_SOURCE_FILE = "Files/incidenti.csv";
-    private static final String PATH_TEMP_FILE = "Files/temp.csv";
-    private static final String PATH_DEST_FILE = "Files/new_incidenti.csv";
-    private static final String SEPARATOR = ";";
     private static int count = 2;
-    private final int id;
+    private final int idRecord;
     private String annoIncidente;
     private String prov;
     private String comune;
@@ -79,26 +74,26 @@ public class Record {
     private String autocarri;
     private String motocicli;
     private String velocipedi;
-    private Set<String> errori;
-    private Set<String> warnings;
-    
+    private Set<String> erroriRecord;
+    private Set<String> warningsRecord;
+
     public Record() {
-        id = count++;
-        errori = new HashSet<>();
-        warnings = new HashSet<>();
+        idRecord = count++;
+        erroriRecord = new HashSet<>();
+        warningsRecord = new HashSet<>();
     }
-    
+
     private Record(String annoIncidente, String prov, String comune, String incidentiTotali, String incidentiMortali,
-                   String feritiTotali, String mortiTotali, String veicoliConConducente, String veicoliSenzaConducente, String conducentiTotali,
-                   String conducentiDonne, String conducentiFeriti, String conducentiMortiInGiornata, String conducentiIgnoti, String conducentiDa0_14,
-                   String conducentiDa15_19, String conducentiDa20_64, String conducentiDa65_piu, String conducentiFeritiDa0_14, String conducentiFeritiDa15_19,
-                   String conducentiFeritiDa20_64, String conducentiFeritiDa65_piu, String conducentiMortiDa0_14, String conducentiMortiDa15_19, String conducentiMortiDa20_64, String conducentiMortiDa65_piu,
-                   String passeggeriFeriti, String passeggeriMorti, String pedoniFeriti, String pedoniMorti, String incidentiStradeUrbane,
-                   String feritiStradeUrbane, String mortiStradeUrbane, String incidentiStradeExtra, String feritiStradeExtra, String mortiStradeExtra,
-                   String incidentiAutostrada, String feritiAutostrada, String mortiAutostrada, String incidentiMarcia, String incidentiVeicoloPedone,
-                   String incidentiIsolati, String incidentiWeekend, String incidentiFeriali, String incidentiNotte, String incidentiGiorno,
-                   String incidentiDa7_9, String incidentiDa17_19, String incidentiSereno, String incidentiNebbia, String incidentiPioggiaNeve,
-                   String autovetture, String autocarri, String motocicli, String velocipedi) {
+            String feritiTotali, String mortiTotali, String veicoliConConducente, String veicoliSenzaConducente, String conducentiTotali,
+            String conducentiDonne, String conducentiFeriti, String conducentiMortiInGiornata, String conducentiIgnoti, String conducentiDa0_14,
+            String conducentiDa15_19, String conducentiDa20_64, String conducentiDa65_piu, String conducentiFeritiDa0_14, String conducentiFeritiDa15_19,
+            String conducentiFeritiDa20_64, String conducentiFeritiDa65_piu, String conducentiMortiDa0_14, String conducentiMortiDa15_19, String conducentiMortiDa20_64, String conducentiMortiDa65_piu,
+            String passeggeriFeriti, String passeggeriMorti, String pedoniFeriti, String pedoniMorti, String incidentiStradeUrbane,
+            String feritiStradeUrbane, String mortiStradeUrbane, String incidentiStradeExtra, String feritiStradeExtra, String mortiStradeExtra,
+            String incidentiAutostrada, String feritiAutostrada, String mortiAutostrada, String incidentiMarcia, String incidentiVeicoloPedone,
+            String incidentiIsolati, String incidentiWeekend, String incidentiFeriali, String incidentiNotte, String incidentiGiorno,
+            String incidentiDa7_9, String incidentiDa17_19, String incidentiSereno, String incidentiNebbia, String incidentiPioggiaNeve,
+            String autovetture, String autocarri, String motocicli, String velocipedi) {
         this();
         this.annoIncidente = annoIncidente;
         this.prov = prov;
@@ -156,375 +151,390 @@ public class Record {
         this.motocicli = motocicli;
         this.velocipedi = velocipedi;
     }
-    
+
     public static Record create(String[] campi) {
         return new Record(campi[0], campi[1], campi[2], campi[3], campi[4],
-                          campi[5], campi[6], campi[7], campi[8], campi[9],
-                          campi[10], campi[11], campi[12], campi[13], campi[14],
-                          campi[15], campi[16], campi[17], campi[18], campi[19],
-                          campi[20], campi[21], campi[22], campi[23], campi[24],
-                          campi[25], campi[26], campi[27], campi[28], campi[29],
-                          campi[30], campi[31], campi[32], campi[33], campi[34],
-                          campi[35], campi[36], campi[37], campi[38], campi[39],
-                          campi[40], campi[41], campi[42], campi[43], campi[44],
-                          campi[45], campi[46], campi[47], campi[48], campi[49],
-                          campi[50], campi[51], campi[52], campi[53], campi[54]);
+                campi[5], campi[6], campi[7], campi[8], campi[9],
+                campi[10], campi[11], campi[12], campi[13], campi[14],
+                campi[15], campi[16], campi[17], campi[18], campi[19],
+                campi[20], campi[21], campi[22], campi[23], campi[24],
+                campi[25], campi[26], campi[27], campi[28], campi[29],
+                campi[30], campi[31], campi[32], campi[33], campi[34],
+                campi[35], campi[36], campi[37], campi[38], campi[39],
+                campi[40], campi[41], campi[42], campi[43], campi[44],
+                campi[45], campi[46], campi[47], campi[48], campi[49],
+                campi[50], campi[51], campi[52], campi[53], campi[54]);
     }
 
-    public void verifica(Map<String, Set<String>> comuni) {
-        boolean corretto;
+    public String getAnnoIncidente() {
+        return annoIncidente;
+    }
+
+    public String getComune() {
+        return comune;
+    }
+
+    public String[] setNewCampi() {
         
+        String[] newCampi = new String[3];
+        Integer tot_incidenti_nonmortali = Integer.parseInt(incidentiTotali) - Integer.parseInt(incidentiMortali);
+        Integer conduc_maschi = Integer.parseInt(conducentiTotali) - Integer.parseInt(conducentiDonne);
+        Integer veic_coinvolti_altro = Integer.parseInt(veicoliConConducente) - Integer.parseInt(autocarri) - Integer.parseInt(autovetture) - Integer.parseInt(velocipedi);
+        newCampi[0] = tot_incidenti_nonmortali.toString();
+        newCampi[1] = conduc_maschi.toString();
+        newCampi[2] = veic_coinvolti_altro.toString();
+        return newCampi;
+    }
+
+    public void verificaRecord() {
+        boolean corretto;
+
         corretto = verificaAnnoIncidente(annoIncidente);
         if (!corretto) {
-            errori.add("Anno incidente errato");
+            erroriRecord.add("Anno incidente errato");
         }
 
         corretto = verificaProvincia(prov);
         if (!corretto) {
-            errori.add("Provincia errata");
+            erroriRecord.add("Provincia errata");
         }
-        
-        corretto = verificaComune(comune, prov, comuni);
+
+        corretto = verificaComune(comune, prov);
         if (!corretto) {
-            errori.add("Comune errato");
+            erroriRecord.add("Comune errato");
         }
-        
+
         corretto = verificaIncidentiTotali(incidentiTotali);
         if (!corretto) {
-            errori.add("Numero di incidenti totali errato");
+            erroriRecord.add("Numero di incidenti totali errato");
         }
-        
+
         corretto = verificaIncidentiMortali(incidentiMortali);
         if (!corretto) {
-            errori.add("Numero di incidenti mortali errato");
+            erroriRecord.add("Numero di incidenti mortali errato");
         }
-        
+
         corretto = verificaComuneFeritiTotali(feritiTotali);
         if (!corretto) {
-            errori.add("Numero di feriti totali errato");
+            erroriRecord.add("Numero di feriti totali errato");
         }
-        
+
         corretto = verificaMortiTotali(mortiTotali);
         if (!corretto) {
-            errori.add("Numero di morti totali errato");
+            erroriRecord.add("Numero di morti totali errato");
         }
-       
+
         corretto = verificaVeicoliConConducente(veicoliConConducente);
         if (!corretto) {
-            errori.add("Numero di veicoli con conducente errato");
+            erroriRecord.add("Numero di veicoli con conducente errato");
         }
-        
+
         corretto = verificaVeicoliSenzaConducente(veicoliSenzaConducente);
         if (!corretto) {
-            errori.add("Numero di veicoli senza conducente errato");
+            erroriRecord.add("Numero di veicoli senza conducente errato");
         }
-        
+
         corretto = verificaConducentiTotali(conducentiTotali);
         if (!corretto) {
-            errori.add("Numero di conducenti totali errato");
+            erroriRecord.add("Numero di conducenti totali errato");
         }
-        
+
         corretto = verificaConducentiDonne(conducentiDonne);
         if (!corretto) {
-            errori.add("Numero di conducenti donne errato");
+            erroriRecord.add("Numero di conducenti donne errato");
         }
-        
+
         corretto = verificaConducentiFeriti(conducentiFeriti);
         if (!corretto) {
-            errori.add("Numero di conducenti feriti errato");
+            erroriRecord.add("Numero di conducenti feriti errato");
         }
-        
+
         corretto = verificaConducentiMortiInGiornata(conducentiMortiInGiornata);
         if (!corretto) {
-            errori.add("Numero di conducenti morti entro 24h errato");
+            erroriRecord.add("Numero di conducenti morti entro 24h errato");
         }
-        
+
         corretto = verificaConducentiIgnoti(conducentiIgnoti);
         if (!corretto) {
-            errori.add("Numero di conducenti ignoti errato");
+            erroriRecord.add("Numero di conducenti ignoti errato");
         }
-        
+
         corretto = verificaConducentiDa0_14(conducentiDa0_14);
         if (!corretto) {
-            errori.add("Numero di conducenti da 0 a 14 anni errato");
+            erroriRecord.add("Numero di conducenti da 0 a 14 anni errato");
         }
-        
+
         corretto = verificaConducentiDa15_19(conducentiDa15_19);
         if (!corretto) {
-            errori.add("Numero di conducenti dai 15 ai 19 anni errato");
+            erroriRecord.add("Numero di conducenti dai 15 ai 19 anni errato");
         }
-        
+
         corretto = verificaConducentiDa20_64(conducentiDa20_64);
         if (!corretto) {
-            errori.add("Numero di conducenti dai 20 ai 64 anni errato");
+            erroriRecord.add("Numero di conducenti dai 20 ai 64 anni errato");
         }
-        
+
         corretto = verificaConducentiDa65_piu(conducentiDa65_piu);
         if (!corretto) {
-            errori.add("Numero di conducenti dai 65 anni in piu' errato");
+            erroriRecord.add("Numero di conducenti dai 65 anni in piu' errato");
         }
-        
+
         corretto = verificaConducentiFeritiDa0_14(conducentiFeritiDa0_14);
         if (!corretto) {
-            errori.add("Numero di feriti da 0 a 14 anni errato");
+            erroriRecord.add("Numero di feriti da 0 a 14 anni errato");
         }
-        
+
         corretto = verificaConducentiFeritiDa15_19(conducentiFeritiDa15_19);
         if (!corretto) {
-            errori.add("Numero di conducenti feriti dai 15 ai 19 anni errato");
+            erroriRecord.add("Numero di conducenti feriti dai 15 ai 19 anni errato");
         }
-        
+
         corretto = verificaConducentiFeritiDa20_64(conducentiFeritiDa20_64);
         if (!corretto) {
-            errori.add("Numero di conducenti feriti dai 20 ai 64 anni errato");
+            erroriRecord.add("Numero di conducenti feriti dai 20 ai 64 anni errato");
         }
-        
+
         corretto = verificaConducentiFeritiDa65_piu(conducentiFeritiDa65_piu);
         if (!corretto) {
-            errori.add("Numero di conducenti feriti dai 65 anni in piu' errato");
+            erroriRecord.add("Numero di conducenti feriti dai 65 anni in piu' errato");
         }
-        
+
         corretto = verificaConducentiMortiDa0_14(conducentiMortiDa0_14);
         if (!corretto) {
-            errori.add("Numero di conducenti morti da 0 a 14 anni errato");
+            erroriRecord.add("Numero di conducenti morti da 0 a 14 anni errato");
         }
-        
+
         corretto = verificaConducentiMortiDa15_19(conducentiMortiDa15_19);
         if (!corretto) {
-            errori.add("Numero di conducenti morti dai 15 ai 19 anni errato");
+            erroriRecord.add("Numero di conducenti morti dai 15 ai 19 anni errato");
         }
-        
+
         corretto = verificaConducentiMortiDa20_64(conducentiMortiDa20_64);
         if (!corretto) {
-            errori.add("Numero di conducenti morti dai 20 ai 64 anni errato");
+            erroriRecord.add("Numero di conducenti morti dai 20 ai 64 anni errato");
         }
-        
+
         corretto = verificaConducentiMortiDa65_piu(conducentiDa65_piu);
         if (!corretto) {
-            errori.add("Numero di conducenti morti dai 65 anni in piu' errato");
+            erroriRecord.add("Numero di conducenti morti dai 65 anni in piu' errato");
         }
-        
+
         corretto = verificaPasseggeriFeriti(passeggeriFeriti);
         if (!corretto) {
-            errori.add("Numero di passeggeri feriti errato");
+            erroriRecord.add("Numero di passeggeri feriti errato");
         }
-        
+
         corretto = verificaPasseggeriMorti(passeggeriMorti);
         if (!corretto) {
-            errori.add("Numero di passeggeri morti errato");
+            erroriRecord.add("Numero di passeggeri morti errato");
         }
-        
+
         corretto = verificaPedoniFeriti(pedoniFeriti);
         if (!corretto) {
-            errori.add("Numero di pedoni feriti errato");
+            erroriRecord.add("Numero di pedoni feriti errato");
         }
-        
+
         corretto = verificaPedoniMorti(pedoniMorti);
         if (!corretto) {
-            errori.add("Numero di pedoni morti errato");
+            erroriRecord.add("Numero di pedoni morti errato");
         }
-        
+
         corretto = verificaIncidentiStradeUrbane(incidentiStradeUrbane);
         if (!corretto) {
-            errori.add("Numero di incidenti nelle urbane errato");
+            erroriRecord.add("Numero di incidenti nelle urbane errato");
         }
-        
+
         corretto = verificaFeritiStradeUrbane(feritiStradeUrbane);
         if (!corretto) {
-            errori.add("Numero di feriti nelle urbane errato");
+            erroriRecord.add("Numero di feriti nelle urbane errato");
         }
-        
+
         corretto = verificaMortiStradeUrbane(mortiStradeUrbane);
         if (!corretto) {
-            errori.add("Numero di morti nelle urbane errato");
+            erroriRecord.add("Numero di morti nelle urbane errato");
         }
-        
+
         corretto = verificaIncidentiStradeExtra(incidentiStradeExtra);
         if (!corretto) {
-            errori.add("Numero di incidenti nelle extraurbane errato");
+            erroriRecord.add("Numero di incidenti nelle extraurbane errato");
         }
-        
+
         corretto = verificaFeritiStradeExtra(feritiStradeExtra);
         if (!corretto) {
-            errori.add("Numero di feriti nelle extraurbane errato");
+            erroriRecord.add("Numero di feriti nelle extraurbane errato");
         }
-        
+
         corretto = verificaMortiStradeExtra(mortiStradeExtra);
         if (!corretto) {
-            errori.add("Numero di morti nelle extraurbane errato");
+            erroriRecord.add("Numero di morti nelle extraurbane errato");
         }
-        
+
         corretto = verificaIncidentiAutostrada(incidentiAutostrada);
         if (!corretto) {
-            errori.add("Numero di incidenti in autostrada errato");
+            erroriRecord.add("Numero di incidenti in autostrada errato");
         }
-        
+
         corretto = verificaFeritiAutostrada(feritiAutostrada);
         if (!corretto) {
-            errori.add("Numero di feriti in autostrada errato");
+            erroriRecord.add("Numero di feriti in autostrada errato");
         }
-        
+
         corretto = verificaMortiAutostrada(mortiAutostrada);
         if (!corretto) {
-            errori.add("Numero di morti in autostrada errato");
+            erroriRecord.add("Numero di morti in autostrada errato");
         }
-        
+
         corretto = verificaIncidentiMarcia(incidentiMarcia);
         if (!corretto) {
-            errori.add("Numero di incidenti in marcia errato");
+            erroriRecord.add("Numero di incidenti in marcia errato");
         }
-        
+
         corretto = verificaIncidentiVeicoloPedone(incidentiVeicoloPedone);
         if (!corretto) {
-            errori.add("Numero di di incidenti veicolo-pedone errato");
+            erroriRecord.add("Numero di di incidenti veicolo-pedone errato");
         }
-       
+
         corretto = verificaIncidentiIsolati(incidentiIsolati);
         if (!corretto) {
-            errori.add("Numero di incidenti isolati errato");
+            erroriRecord.add("Numero di incidenti isolati errato");
         }
-        
+
         corretto = verificaIncidentiWeekend(incidentiWeekend);
         if (!corretto) {
-            errori.add("Numero di incidenti nei weekend errato");
+            erroriRecord.add("Numero di incidenti nei weekend errato");
         }
-        
+
         corretto = verificaIncidentiFeriali(incidentiFeriali);
         if (!corretto) {
-            errori.add("Numero di incidenti nei feriali errato");
+            erroriRecord.add("Numero di incidenti nei feriali errato");
         }
-        
+
         corretto = verificaIncidentiNotte(incidentiNotte);
         if (!corretto) {
-            errori.add("Numero di incidenti di notte errato");
+            erroriRecord.add("Numero di incidenti di notte errato");
         }
-        
+
         corretto = verificaIncidentiGiorno(incidentiGiorno);
         if (!corretto) {
-            errori.add("Numero di incidenti di giorno errato");
+            erroriRecord.add("Numero di incidenti di giorno errato");
         }
-        
+
         corretto = verificaIncidentiDa7_9(incidentiDa7_9);
         if (!corretto) {
-            errori.add("Numero di incidenti dalle 7 alle 9 errato");
+            erroriRecord.add("Numero di incidenti dalle 7 alle 9 errato");
         }
-        
+
         corretto = verificaIncidentiDa17_19(incidentiDa17_19);
         if (!corretto) {
-            errori.add("Numero di incidenti dalle 17 alle 19 errato");
+            erroriRecord.add("Numero di incidenti dalle 17 alle 19 errato");
         }
-        
+
         corretto = verificaIncidentiSereno(incidentiSereno);
         if (!corretto) {
-            errori.add("Numero di incidenti con sereno errato");
+            erroriRecord.add("Numero di incidenti con sereno errato");
         }
-        
+
         corretto = verificaIncidentiNebbia(incidentiNebbia);
         if (!corretto) {
-            errori.add("Numero di incidenti con nebbia errato");
+            erroriRecord.add("Numero di incidenti con nebbia errato");
         }
-        
+
         corretto = verificaIncidentiPioggia_Neve(incidentiPioggiaNeve);
         if (!corretto) {
-            errori.add("Numero di incidenti con pioggia e neve errato");
+            erroriRecord.add("Numero di incidenti con pioggia e neve errato");
         }
-        
+
         corretto = verificaAutovetture(autovetture);
         if (!corretto) {
-            errori.add("Numero di autovetture errato");
+            erroriRecord.add("Numero di autovetture errato");
         }
-        
+
         corretto = verificaAutocarri(autocarri);
         if (!corretto) {
-            errori.add("Numero di autocarri errato");
+            erroriRecord.add("Numero di autocarri errato");
         }
-        
+
         corretto = verificaMotocicli(motocicli);
         if (!corretto) {
-            errori.add("Numero di motocicli errato");
+            erroriRecord.add("Numero di motocicli errato");
         }
-        
+
         corretto = verificaVelocipedi(velocipedi);
         if (!corretto) {
-            errori.add("Numero di velocipiedi errato");
+            erroriRecord.add("Numero di velocipiedi errato");
         }
-        
+
         corretto = verificaIncidentiPerLuogo(incidentiTotali, incidentiStradeUrbane, incidentiStradeExtra, incidentiAutostrada);
         if (!corretto) {
-            warnings.add("Numero di incidenti inconsistente per luogo");
-        }      
-        
+            warningsRecord.add("Numero di incidenti inconsistente per luogo");
+        }
+
         corretto = verificaIncidentiPerTipologia(incidentiTotali, incidentiMarcia, incidentiVeicoloPedone, incidentiIsolati);
         if (!corretto) {
-            warnings.add("Numero di incidenti inconsistente per tipologia");
-        } 
-        
+            warningsRecord.add("Numero di incidenti inconsistente per tipologia");
+        }
+
         corretto = verificaIncidentiPerGiorni(incidentiTotali, incidentiFeriali, incidentiWeekend);
         if (!corretto) {
-            warnings.add("Numero di incidenti inconsistente per giorni");
-        } 
-        
+            warningsRecord.add("Numero di incidenti inconsistente per giorni");
+        }
+
         corretto = verificaIncidentiPerOrario(incidentiTotali, incidentiGiorno, incidentiNotte);
         if (!corretto) {
-            warnings.add("Numero di incidenti inconsistente per orario");
-        } 
-        
+            warningsRecord.add("Numero di incidenti inconsistente per orario");
+        }
+
         corretto = verificaIncidentiPerOreDiPunta(incidentiTotali, incidentiDa7_9, incidentiDa17_19);
         if (!corretto) {
-            warnings.add("Numero di incidenti inconsistente per orari di punta");
+            warningsRecord.add("Numero di incidenti inconsistente per orari di punta");
         }
-        
+
         corretto = verificaIncidentiPerMeteo(incidentiTotali, incidentiSereno, incidentiNebbia, incidentiPioggiaNeve);
         if (!corretto) {
-            warnings.add("Numero di incidenti inconsistente per meteo");
+            warningsRecord.add("Numero di incidenti inconsistente per meteo");
         }
-        
+
         corretto = verificaFeriti(feritiTotali, conducentiFeriti, passeggeriFeriti, pedoniFeriti);
         if (!corretto) {
-            warnings.add("Numero di feriti inconsistente");
+            warningsRecord.add("Numero di feriti inconsistente");
         }
-        
+
         corretto = verificaMorti(mortiTotali, conducentiMortiDa0_14, conducentiMortiDa15_19, conducentiMortiDa20_64, conducentiMortiDa65_piu, passeggeriMorti, pedoniMorti);
         if (!corretto) {
-            warnings.add("Numero di feriti inconsistente");
+            warningsRecord.add("Numero di feriti inconsistente");
         }
-        
+
         corretto = verificaVeicoliConConducente(veicoliConConducente, autovetture, autocarri, motocicli, velocipedi);
         if (!corretto) {
-            warnings.add("Numero di veicolo con conducente inconsistente");
+            warningsRecord.add("Numero di veicolo con conducente inconsistente");
         }
-        
+
         corretto = verificaConducentiTotaliPerAnni(conducentiTotali, conducentiDa0_14, conducentiDa15_19, conducentiDa20_64, conducentiDa65_piu);
         if (!corretto) {
-            warnings.add("Numero di conducenti totali inconsistente");
+            warningsRecord.add("Numero di conducenti totali inconsistente");
         }
-        
+
         corretto = verificaConducentiFeritiPerAnni(conducentiFeriti, conducentiFeritiDa0_14, conducentiFeritiDa15_19, conducentiFeritiDa20_64, conducentiFeritiDa65_piu);
         if (!corretto) {
-            warnings.add("Numero di conducenti feriti inconsistente");
+            warningsRecord.add("Numero di conducenti feriti inconsistente");
         }
     }
-    
+
     public boolean isCorrect() {
-        return errori.isEmpty();
+        return erroriRecord.isEmpty();
     }
-    
-    public boolean isPresent(Set<Chiave> chiavi) {
-        return chiavi.contains(new Chiave(annoIncidente, comune));
-    }
-    
+
     public void addError(String error) {
-        errori.add(error);
+        erroriRecord.add(error);
     }
 
     @Override
     public String toString() {
-        return "Record{" + "riga=" + id + ", errori=" + errori + ", warnings=" + warnings + '}';
+        return "Record{" + "riga=" + idRecord + ", errori=" + erroriRecord + ", warnings=" + warningsRecord + '}';
     }
-    
-    
+
     private static boolean verificaAnnoIncidente(String annoIncidente) {
-        return annoIncidente.compareTo(ANNO_INIZIALE)>=0 && annoIncidente.compareTo(ANNO_FINALE)<=0;
+        return annoIncidente.compareTo(ANNO_INIZIALE) >= 0 && annoIncidente.compareTo(ANNO_FINALE) <= 0;
     }
 
     private static boolean verificaProvincia(String prov) {
@@ -541,24 +551,24 @@ public class Record {
         province.add("PAVIA");
         province.add("SONDRIO");
         province.add("VARESE");
-        
+
         return province.contains(prov);
     }
 
-    private static boolean verificaComune(String comune, String prov, Map<String, Set<String>> comuni) {
-        return comuni.containsKey(prov) && comuni.get(prov).contains(comune);
+    private static boolean verificaComune(String comune, String prov) {
+        return Controlli.getComuni().containsKey(prov) && Controlli.getComuni().get(prov).contains(comune);
     }
-    
+
     private static boolean verificaNumero(String s) {
         int num;
         try {
             num = Integer.parseInt(s);
-        }catch(NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return false;
         }
-        return num>=0;
+        return num >= 0;
     }
-    
+
     private static boolean verificaVeicoliSenzaConducente(String veicoliSenzaConducente) {
         return verificaNumero(veicoliSenzaConducente);
     }
@@ -616,11 +626,11 @@ public class Record {
     }
 
     private static boolean verificaPasseggeriFeriti(String passeggeriFeriti) {
-       return verificaNumero(passeggeriFeriti); 
+        return verificaNumero(passeggeriFeriti);
     }
 
     private static boolean verificaConducentiMortiDa65_piu(String conducentiDa65_piu) {
-        return verificaNumero(conducentiDa65_piu); 
+        return verificaNumero(conducentiDa65_piu);
     }
 
     private static boolean verificaConducentiMortiDa20_64(String conducentiMortiDa20_64) {
@@ -762,77 +772,77 @@ public class Record {
     private static boolean verificaIncidentiNebbia(String incidentiNebbia) {
         return verificaNumero(incidentiNebbia);
     }
-    
+
     private static boolean verificaVelocipedi(String velocipedi) {
         return verificaNumero(velocipedi);
     }
 
     private static boolean verificaIncidentiPerTipologia(String incidentiTotali, String incidentiMarcia, String incidentiVeicoloPedone, String incidentiIsolati) {
-        return Integer.parseInt(incidentiTotali) >= Integer.parseInt(incidentiMarcia) +
-                                                    Integer.parseInt(incidentiVeicoloPedone)  +
-                                                    Integer.parseInt(incidentiIsolati); 
+        return Integer.parseInt(incidentiTotali) >= Integer.parseInt(incidentiMarcia)
+                + Integer.parseInt(incidentiVeicoloPedone)
+                + Integer.parseInt(incidentiIsolati);
     }
 
     private static boolean verificaIncidentiPerLuogo(String incidentiTotali, String incidentiStradeUrbane, String incidentiStradeExtra, String incidentiAutostrada) {
-        return Integer.parseInt(incidentiTotali) >= Integer.parseInt(incidentiStradeUrbane) +
-                                                    Integer.parseInt(incidentiStradeExtra)  +
-                                                    Integer.parseInt(incidentiAutostrada);
+        return Integer.parseInt(incidentiTotali) >= Integer.parseInt(incidentiStradeUrbane)
+                + Integer.parseInt(incidentiStradeExtra)
+                + Integer.parseInt(incidentiAutostrada);
     }
 
     private static boolean verificaIncidentiPerGiorni(String incidentiTotali, String incidentiFeriali, String incidentiWeekend) {
-        return Integer.parseInt(incidentiTotali) == Integer.parseInt(incidentiFeriali) +
-                                                    Integer.parseInt(incidentiWeekend);
+        return Integer.parseInt(incidentiTotali) == Integer.parseInt(incidentiFeriali)
+                + Integer.parseInt(incidentiWeekend);
     }
 
     private static boolean verificaIncidentiPerOrario(String incidentiTotali, String incidentiGiorno, String incidentiNotte) {
-        return Integer.parseInt(incidentiTotali) >= Integer.parseInt(incidentiGiorno) +
-                                                    Integer.parseInt(incidentiNotte);
+        return Integer.parseInt(incidentiTotali) >= Integer.parseInt(incidentiGiorno)
+                + Integer.parseInt(incidentiNotte);
     }
 
     private static boolean verificaIncidentiPerOreDiPunta(String incidentiTotali, String incidentiDa7_9, String incidentiDa17_19) {
-        return Integer.parseInt(incidentiTotali) >= Integer.parseInt(incidentiDa7_9) +
-                                                    Integer.parseInt(incidentiDa17_19);
+        return Integer.parseInt(incidentiTotali) >= Integer.parseInt(incidentiDa7_9)
+                + Integer.parseInt(incidentiDa17_19);
     }
 
     private static boolean verificaIncidentiPerMeteo(String incidentiTotali, String incidentiSereno, String incidentiNebbia, String incidentiPioggiaNeve) {
-        return Integer.parseInt(incidentiTotali) >= Integer.parseInt(incidentiSereno) +
-                                                    Integer.parseInt(incidentiNebbia) +
-                                                    Integer.parseInt(incidentiPioggiaNeve);
+        return Integer.parseInt(incidentiTotali) >= Integer.parseInt(incidentiSereno)
+                + Integer.parseInt(incidentiNebbia)
+                + Integer.parseInt(incidentiPioggiaNeve);
     }
 
     private static boolean verificaFeriti(String feritiTotali, String conducentiFeriti, String passeggeriFeriti, String pedoniFeriti) {
-        return Integer.parseInt(feritiTotali) >= Integer.parseInt(conducentiFeriti) +
-                                                    Integer.parseInt(passeggeriFeriti) +
-                                                    Integer.parseInt(pedoniFeriti);
+        return Integer.parseInt(feritiTotali) >= Integer.parseInt(conducentiFeriti)
+                + Integer.parseInt(passeggeriFeriti)
+                + Integer.parseInt(pedoniFeriti);
     }
 
     private static boolean verificaMorti(String mortiTotali, String conducentiMortiDa0_14, String conducentiMortiDa15_19, String conducentiMortiDa20_64, String conducentiMortiDa65_piu, String passeggeriMorti, String pedoniMorti) {
-        return Integer.parseInt(mortiTotali) >= Integer.parseInt(conducentiMortiDa0_14) +
-                                                Integer.parseInt(conducentiMortiDa15_19) +
-                                                Integer.parseInt(conducentiMortiDa20_64) +
-                                                Integer.parseInt(conducentiMortiDa65_piu) +
-                                                Integer.parseInt(passeggeriMorti) +
-                                                Integer.parseInt(pedoniMorti);
+        return Integer.parseInt(mortiTotali) >= Integer.parseInt(conducentiMortiDa0_14)
+                + Integer.parseInt(conducentiMortiDa15_19)
+                + Integer.parseInt(conducentiMortiDa20_64)
+                + Integer.parseInt(conducentiMortiDa65_piu)
+                + Integer.parseInt(passeggeriMorti)
+                + Integer.parseInt(pedoniMorti);
     }
 
     private static boolean verificaVeicoliConConducente(String veicoliConConducente, String autovetture, String autocarri, String motocicli, String velocipedi) {
-       return Integer.parseInt(veicoliConConducente) >= Integer.parseInt(autovetture) +
-                                                        Integer.parseInt(autocarri) +
-                                                        Integer.parseInt(motocicli) +
-                                                        Integer.parseInt(velocipedi);
+        return Integer.parseInt(veicoliConConducente) >= Integer.parseInt(autovetture)
+                + Integer.parseInt(autocarri)
+                + Integer.parseInt(motocicli)
+                + Integer.parseInt(velocipedi);
     }
 
     private static boolean verificaConducentiTotaliPerAnni(String conducentiTotali, String conducentiDa0_14, String conducentiDa15_19, String conducentiDa20_64, String conducentiDa65_piu) {
-        return Integer.parseInt(conducentiTotali) >= Integer.parseInt(conducentiDa0_14) +
-                                                     Integer.parseInt(conducentiDa15_19) +
-                                                     Integer.parseInt(conducentiDa20_64) +
-                                                     Integer.parseInt(conducentiDa65_piu);
+        return Integer.parseInt(conducentiTotali) >= Integer.parseInt(conducentiDa0_14)
+                + Integer.parseInt(conducentiDa15_19)
+                + Integer.parseInt(conducentiDa20_64)
+                + Integer.parseInt(conducentiDa65_piu);
     }
 
     private static boolean verificaConducentiFeritiPerAnni(String conducentiFeriti, String conducentiFeritiDa0_14, String conducentiFeritiDa15_19, String conducentiFeritiDa20_64, String conducentiFeritiDa65_piu) {
-        return Integer.parseInt(conducentiFeriti) >= Integer.parseInt(conducentiFeritiDa0_14) +
-                                                           Integer.parseInt(conducentiFeritiDa15_19) +
-                                                           Integer.parseInt(conducentiFeritiDa20_64) +
-                                                           Integer.parseInt(conducentiFeritiDa65_piu);
+        return Integer.parseInt(conducentiFeriti) >= Integer.parseInt(conducentiFeritiDa0_14)
+                + Integer.parseInt(conducentiFeritiDa15_19)
+                + Integer.parseInt(conducentiFeritiDa20_64)
+                + Integer.parseInt(conducentiFeritiDa65_piu);
     }
 }

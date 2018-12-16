@@ -48,7 +48,7 @@ public class Main {
                             String[] path = {s2};
                             MainETL.main(path);
                         } else {
-                            System.out.print("\nIl file che hai indicato non esiste.\n\n");
+                            System.out.print("\nIl file che hai indicato non esiste o non è nel path corrente.\n\n");
                         }
                         break;
                     case 3:
