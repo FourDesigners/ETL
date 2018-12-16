@@ -29,43 +29,71 @@ import java.util.logging.Logger;
  */
 public class MainETL implements Constants {
 
+    static int duplicati = 0;
+    static int errati = 0;
+    static int accettati = 0;
+    static int totali = 0;
+    static Timestamp mTimestamp = new Timestamp();
+    static String data = mTimestamp.getData();
+    static String timestamp = mTimestamp.getTimestamp();
+
     @SuppressWarnings("ConvertToTryWithResources")
     public static void main(String[] args) throws IOException {
-        int duplicati = 0;
-        int errati = 0;
-        int accettati = 0;
-       
+        long start = System.currentTimeMillis();
 
-        Timestamp mTimestamp = new Timestamp();
-        String data = mTimestamp.getData();
-        String timestamp = mTimestamp.getTimestamp();
+        print("\n\n                INIZIO PROCEDURA ETL\n\n");
+        String PATH_LOG_FILE = RESULT_FILE + data + ".html";
+        proceduraETL(PATH_DATAWHAREHOUSE_CSV, PATH_TEMP_FILE, PATH_SOURCE_FILE, PATH_LOG_FILE, true);
+        long finish = System.currentTimeMillis();
+        long timeElapsed = finish - start;
+        System.out.println("PROCEDURA ETL " + timestamp + " TERMINATA");
+        print("Tempo impiegato: " + timeElapsed + " ms\n");
 
-        final String PATH_RESULT_FILE = RESULT_FILE + data + ".html";
-        PrintWriter streamResultFile = new PrintWriter(new BufferedWriter(new FileWriter(PATH_RESULT_FILE)));
-        streamResultFile.write(INIT);
-        //outStream.write(REPORT_MESSAGE + timestamp + "\r\n\r\n");
-        streamResultFile.write("<h1><b>" + REPORT_MESSAGE + timestamp + "</b></h1><br>");
-        //outStream.write(ERROR_MESSAGE + "\r\n");
-        
+    }
 
-        try {
+    public static void proceduraETL(String fileDW, String fileTmp, String fileSorgente, String fileLog, Boolean stampaLog) throws IOException {
+
+        PrintWriter streamLogFile;
+
+        try (PrintWriter tempPrinter = new PrintWriter(new BufferedWriter(new FileWriter(fileLog)))) {
+            streamLogFile = tempPrinter;
+
+            if (stampaLog) {
+                streamLogFile.write(INTESTAZIONE_REPORT);
+                //outStream.write(REPORT_MESSAGE + timestamp + "\r\n\r\n");
+                streamLogFile.write("<h1><b>" + REPORT_MESSAGE + timestamp + "</b></h1><br>");
+                //outStream.write(ERROR_MESSAGE + "\r\n");
+            }
+            print("File di destinazione procedure: " + fileDW + "\n"
+                    + "File sorgente dati: \t\t" + fileSorgente + "\n");
+            if (stampaLog) {
+                System.out.println("File di log: \t\t\t" + fileLog);
+            }
+
             //Riempie il set di comuni dal file dei comuni della regione
+            print("\nCaricamento file comuni: ............");
             Controlli.fillMunicipalities(PATH_COMUNI_FILE);
-            
-            //Apre il file proveniente dalla procedura OLTP
-            Scanner stramSourceFile = new Scanner(new File(PATH_SOURCE_FILE));
-            String rigaSourceFile = stramSourceFile.nextLine();
+            print("OK\n");
 
-            System.out.print("Controllo intestazione: ");
+            //Apre il file proveniente dalla procedura OLTP
+            Scanner stramSourceFile = new Scanner(new File(fileSorgente));
+            print("Caricamento file sorgente dati: .....");
+            String rigaSourceFile = stramSourceFile.nextLine();
+            print("OK\n");
+
+            print("Controllo intestazione: .............");
             //controlla l'intestazione del file, lancia eccezione WrongHeaderExceprion se intestazione errata
             Controlli.verificaIntestazione(rigaSourceFile.split(SEPARATOR));
-            System.out.print("OK");
+            print("OK\n");
 
-            streamResultFile.write("<h3>" + ERROR_MESSAGE + "</h3><br><ul>");
-            //controlla che il file TEMP non esista già 
-            if (!new File(PATH_DATAWHAREHOUSE_CSV).exists()) {
+            if (stampaLog) {
+                streamLogFile.write("<h3>" + ERROR_MESSAGE + "</h3><br><ul>");
+            }
+            //controlla che il file Datawharehouse non esista già 
+            print("Apertura file destinazione: .........");
+            if (!new File(fileDW).exists()) {
                 //Se non esiste, riempie l'intestazione con i campi scelti nel protocollo
-                PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(PATH_DATAWHAREHOUSE_CSV)));
+                PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(fileDW)));
                 out.print(rigaSourceFile);
                 for (String s : NEW_CAMPI) {
                     out.print(SEPARATOR + s);
@@ -74,29 +102,42 @@ public class MainETL implements Constants {
                 out.close();
             } else {
                 //se esiste, riempie il set di chiavi esistente che servirà per i controlli
-                Controlli.fillKeys(PATH_DATAWHAREHOUSE_CSV);
+                Controlli.fillKeys(fileDW);
             }
+            print("OK\n");
 
-            PrintWriter writerTempFile = new PrintWriter(new BufferedWriter(new FileWriter(PATH_TEMP_FILE)));
+            print("Apertura file di appoggio: ..........");
+            PrintWriter writerTempFile = new PrintWriter(new BufferedWriter(new FileWriter(fileTmp)));
+            print("OK\n");
+            print(SEPARATOR_LINE);
+
+            print("CONTROLLO RECORD\n");
             while (stramSourceFile.hasNextLine()) {
                 rigaSourceFile = stramSourceFile.nextLine();
                 String[] campiRigaAnalizzata = rigaSourceFile.split(SEPARATOR);
                 Record record;
+                totali++;
+                if (totali % 1000 == 0) {
+                    print(".");
+                    if (totali % 30000 == 0) {
+                        print("\n");
+                    }
+                }
                 if (campiRigaAnalizzata.length == N_COLONNE) { //controllo coerenza con il protocollo
                     record = Record.create(campiRigaAnalizzata);
-                    
+
                     record.verificaRecord(); //controllo consistenza del record
                     if (record.isCorrect()) {
-                        if (Controlli.recordIsPresent(record)) { //controllo duplicati
+                        if (!Controlli.recordIsPresent(record)) { //controllo duplicati
                             accettati++;
                             Controlli.addChiave(new Chiave(campiRigaAnalizzata[0], campiRigaAnalizzata[2]));
-                            
+
                             //scrive la riga appena analizzata nel file temporaneo
                             writerTempFile.print(campiRigaAnalizzata[0]);
                             for (int i = 1; i < campiRigaAnalizzata.length; i++) {
                                 writerTempFile.print(SEPARATOR + campiRigaAnalizzata[i]);
-                            }                            
-                            String[] newCampi = record.setNewCampi();                            
+                            }
+                            String[] newCampi = record.setNewCampi();
                             for (String s : newCampi) {
                                 writerTempFile.print(SEPARATOR + s);
                             }
@@ -106,50 +147,64 @@ public class MainETL implements Constants {
                         }
                     } else { //record inconsistente per qualche controllo non andato a buon fine
                         //outStream.write(record.toString() + "\r\n");
-                        streamResultFile.write("<li>" + record.toString() + "</li>");
+                        streamLogFile.write("<li>" + record.toString() + "</li>");
                         errati++;
                     }
                 } else { //record incoerente con il protocollo
-                    
+
                     //todo gestione riga incoerente protocol
                     record = new Record();
                     record.addError("Numero di colonne errato");
-                    streamResultFile.write(record.toString() + "\r\n");
+                    streamLogFile.write(record.toString() + "\r\n");
                 }
             }
-            
+
             //scansione delle righe del file terminata, chiusura degli stream
-            streamResultFile.write("</ul>");
+            streamLogFile.write("</ul>");
             writerTempFile.close();
             stramSourceFile.close();
-            
-            
+
+            int mancanti = Controlli.findMissingRecords(fileTmp, fileDW, streamLogFile);
+            print("\n");
+            print("Record analizzati: " + totali + "\n");
+            print("Record accettati: " + accettati + "\n");
+            print("Record non accettati perche' duplicati: " + duplicati + "\n");
+            print("Record non accettati perche' errati: " + errati + "\n");
+
+            if (stampaLog) {
+                streamLogFile.write("<h3>" + MISSINGS_MESSAGE + "</h3><ul>");
+                streamLogFile.write("Numero righe accettate : " + accettati + "<br>");
+                streamLogFile.write("Numero righe duplicate : " + duplicati + "<br>");
+                streamLogFile.write("Numero righe rifiutate : " + errati + "<br>");
+                streamLogFile.write("Numero righe mancanti : " + mancanti + "<br>");
+            }
+
             //mancanti = findMissingRecords2("Files/temp_demo.csv", "Files/new_incidenti_demo.csv", comuni); //controlla se ci sono righe mancanti
             //outStream.write("\r\n" + MISSINGS_MESSAGE + "\r\n");
-            streamResultFile.write("<h3>" + MISSINGS_MESSAGE + "</h3><ul>");
-            int mancanti = Controlli.findMissingRecords(PATH_TEMP_FILE, PATH_DATAWHAREHOUSE_CSV, streamResultFile);
-            update(PATH_TEMP_FILE, PATH_DATAWHAREHOUSE_CSV); //aggiunge le nuove righe al file dest
+            print("Caricamento nuovi record nel file destinazione.......");
+            update(fileTmp, fileDW); //aggiunge le nuove righe al file dest
+            print("OK\n");
             //outStream.write("Numero righe accettate : " + accettati + "\r\n");
             //outStream.write("Numero righe duplicate : " + duplicati + "\r\n");
             //outStream.write("Numero righe rifiutate : " + errati + "\r\n");
             //outStream.write("Numero righe mancanti : " + mancanti + "\r\n");
-            streamResultFile.write("Numero righe accettate : " + accettati + "<br>");
-            streamResultFile.write("Numero righe duplicate : " + duplicati + "<br>");
-            streamResultFile.write("Numero righe rifiutate : " + errati + "<br>");
-            streamResultFile.write("Numero righe mancanti : " + mancanti + "<br>");
 
-            streamResultFile.write(CLOSE);
-            streamResultFile.close();
-            System.out.println("PROCEDURA ETL " + timestamp + " TERMINATA");
+            streamLogFile.write(CLOSE);
+            streamLogFile.close();
+            print(SEPARATOR_LINE);
+
         } catch (FileNotFoundException e) {
             System.out.println("Non è stato trovato il file");
-            
+
             //Todo gestione throw impossibile aprire file datawharehouse
             //Todo gestire throw file comuni non presente
         } catch (WrongHeaderException ex) {
             System.out.print("FALLITO");
             System.out.println(ex);
+        } catch (IOException e) {
+            System.out.println("Io exception");
         }
+
     }
 
     @SuppressWarnings("ConvertToTryWithResources")
@@ -164,11 +219,9 @@ public class MainETL implements Constants {
         inputStream.close();
     }
 
-    
-
-    
-
-    
+    public static void print(String s) {
+        System.out.print(s);
+    }
 
     /*
     private static int findMissingRecords(String finalFile, String tempFile, Map<String, Set<String>> provinceComuni) {
