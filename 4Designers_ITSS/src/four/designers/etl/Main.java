@@ -37,6 +37,7 @@ public class Main {
                 switch (s) {
                     case 1:
                         MainETL.main(new String[1]);
+                        s=0;
                         break;
                     case 2:
                         System.out.print("\nInserisci il file da utilizzare: ");
@@ -47,6 +48,7 @@ public class Main {
                         if (exists) {
                             String[] path = {s2};
                             MainETL.main(path);
+                            s=0;
                         } else {
                             System.out.print("\nIl file che hai indicato non esiste o non è nel path corrente.\n\n");
                         }
