@@ -7,15 +7,14 @@ package etlScript;
 
 /**
  *
- * @author Pan
+ * @author FourDesigners
  */
 public interface Constants {
 
     static final String PATH_COMUNI_FILE = "Files/comuni.csv";
-    static final String PATH_SOURCE_FILE = "Files/incidenti.csv";
+    static final String PATH_SOURCE_FILE = "Files/sorgente.csv";
     static final String PATH_TEMP_FILE = "Files/temp.csv";
-    static final String PATH_DATAWHAREHOUSE_CSV = "Files/datawharehouse.csv";
-    static final String RESULT_FILE = "Files/log";
+    static final String PATH_RESULT_FILE = "Files/risultato";
 
     static final String INTESTAZIONE_REPORT = "<html><head><title>Procedura ETL</title></head><body style=\"background-color:lavender\";>";
     static final String CLOSE = "</body></html>";

@@ -5,18 +5,12 @@
  */
 package etlScript;
 
-import static etlScript.Constants.SEPARATOR;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Objects;
-import java.util.Scanner;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  *
- * @author utente1
+ * @author FourDesigners
  */
 public class Chiave {
     private final String annoIncidente;

@@ -16,8 +16,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  *
@@ -39,7 +38,6 @@ public class Controlli {
         
         for (int i = 0; i < Constants.CAMPI_OLTP.length; i++) {
             if (!Constants.CAMPI_OLTP[i].equals(split[i])) {
-                System.out.println("\n    |" + split[i] + "     |" + Constants.CAMPI_OLTP[i] + "      " + Constants.CAMPI_OLTP[i].equals(split[i]));
                 throw new WrongHeaderException(i);
             }
         }

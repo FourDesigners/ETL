@@ -7,7 +7,7 @@ package eccezioni;
 
 /**
  *
- * @author Pan
+ * @author FourDesigners
  */
 public class RecordIncorrettoException extends Exception {
 

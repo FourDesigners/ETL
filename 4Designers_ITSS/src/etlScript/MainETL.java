@@ -42,8 +42,8 @@ public class MainETL implements Constants {
         long start = System.currentTimeMillis();
 
         print("\n\n                INIZIO PROCEDURA ETL\n\n");
-        String PATH_LOG_FILE = RESULT_FILE + data + ".html";
-        proceduraETL(PATH_DATAWHAREHOUSE_CSV, PATH_TEMP_FILE, PATH_SOURCE_FILE, PATH_LOG_FILE, true);
+        String PATH_LOG_FILE = PATH_RESULT_FILE + data + ".html";
+        proceduraETL(PATH_RESULT_FILE + ".csv", PATH_TEMP_FILE, PATH_SOURCE_FILE, PATH_LOG_FILE, true);
         long finish = System.currentTimeMillis();
         long timeElapsed = finish - start;
         System.out.println("PROCEDURA ETL " + timestamp + " TERMINATA");

@@ -7,7 +7,7 @@ package eccezioni;
 
 /**
  *
- * @author Pan
+ * @author FourDesigners
  */
 public class WrongHeaderException extends Exception{
     
