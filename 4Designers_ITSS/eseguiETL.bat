@@ -1,0 +1,1 @@
+java -jar "D:\Progetti\Integrazione\trunk\4Designers_ITSS\dist\4Designers_ITSS.jar" default

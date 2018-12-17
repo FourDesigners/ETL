@@ -21,23 +21,31 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.print(Utility.LOGO);
-        int s;
+
+        Scanner scanner = new Scanner(System.in);
+        int s=0;
+        String comando = null;
+        if (args.length >= 1) {
+            comando = args[0];
+        }
         do {
-
-            System.out.print("\nElenco comandi: \n");
-            System.out.print("Comando: (1) eseguire procedura ETL con impostazioni di default\n");
-            System.out.print("Comando: (2) eseguire la procedura ETL selezionando un file\n");
-            System.out.print("Comando: (3) esegue i test sulla procedura\n");
-            System.out.print("Comando: (0) Chiudi la procedura\n");
-            System.out.print("\nInserisci un comando: ");
-            Scanner scanner = new Scanner(System.in);
-            s = scanner.nextInt();
-
             try {
+                Thread.sleep(1000);
+                if (comando != null && comando.equals("default")) {
+                    s = 1;
+                } else {
+                    System.out.print("\nElenco comandi: \n");
+                    System.out.print("Comando: (1) eseguire procedura ETL con impostazioni di default\n");
+                    System.out.print("Comando: (2) eseguire la procedura ETL selezionando un file\n");
+                    System.out.print("Comando: (3) esegue i test sulla procedura\n");
+                    System.out.print("Comando: (0) Chiudi la procedura\n");
+                    System.out.print("\nInserisci un comando: ");
+                    s = scanner.nextInt();
+                }
                 switch (s) {
                     case 1:
                         MainETL.main(new String[1]);
-                        s=0;
+                        s = 0;
                         break;
                     case 2:
                         System.out.print("\nInserisci il file da utilizzare: ");
@@ -48,7 +56,7 @@ public class Main {
                         if (exists) {
                             String[] path = {s2};
                             MainETL.main(path);
-                            s=0;
+                            s = 0;
                         } else {
                             System.out.print("\nIl file che hai indicato non esiste o non è nel path corrente.\n\n");
                         }
@@ -64,9 +72,12 @@ public class Main {
 
             } catch (IOException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         } while (s != 0);
-
+        System.out.println("\nPremere Invio per chiudere la procedura.....");
+        String line = scanner.nextLine();
     }
 }

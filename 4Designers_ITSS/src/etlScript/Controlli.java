@@ -37,9 +37,7 @@ public class Controlli {
             split[0] = split[0].substring(1);
             count++;
         }
-        if(count == 3) {
-            throw new WrongHeaderException();
-        }
+       
         
         for (int i = 0; i < Constants.CAMPI_OLTP.length; i++) {
             if (!Constants.CAMPI_OLTP[i].equals(split[i])) {

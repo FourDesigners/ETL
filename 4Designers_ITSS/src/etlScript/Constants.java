@@ -15,6 +15,7 @@ public interface Constants {
     static final String PATH_SOURCE_FILE = "Files/sorgente.csv";
     static final String PATH_TEMP_FILE = "Files/temp.csv";
     static final String PATH_RESULT_FILE = "Files/risultato";
+    static final String PATH_RESULT_FILE_RISULTATI = "Files/Risultati/risultato";
 
     static final String INTESTAZIONE_REPORT = "<html><head><title>Procedura ETL</title></head><body style=\"background-color:lavender\";>";
     static final String CLOSE = "</body></html>";

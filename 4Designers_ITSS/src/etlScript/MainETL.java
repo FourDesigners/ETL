@@ -38,11 +38,11 @@ public class MainETL implements Constants {
     static String timestamp = mTimestamp.getTimestamp();
 
     @SuppressWarnings("ConvertToTryWithResources")
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         long start = System.currentTimeMillis();
-
+        
         print("\n\n                INIZIO PROCEDURA ETL\n\n");
-        String PATH_LOG_FILE = PATH_RESULT_FILE + data + ".html";
+        String PATH_LOG_FILE = PATH_RESULT_FILE_RISULTATI + data + ".html";
         proceduraETL(PATH_RESULT_FILE + ".csv", PATH_TEMP_FILE, PATH_SOURCE_FILE, PATH_LOG_FILE, true);
         long finish = System.currentTimeMillis();
         long timeElapsed = finish - start;
@@ -51,7 +51,7 @@ public class MainETL implements Constants {
 
     }
 
-    public static void proceduraETL(String fileDW, String fileTmp, String fileSorgente, String fileLog, Boolean stampaLog) throws IOException {
+    public static void proceduraETL(String fileDW, String fileTmp, String fileSorgente, String fileLog, Boolean stampaLog) throws IOException, InterruptedException {
 
         PrintWriter streamLogFile;
 
@@ -64,11 +64,13 @@ public class MainETL implements Constants {
                 streamLogFile.write("<h1><b>" + REPORT_MESSAGE + timestamp + "</b></h1><br>");
                 //outStream.write(ERROR_MESSAGE + "\r\n");
             }
+            Thread.sleep(1000);
             print("File di destinazione procedure: " + fileDW + "\n"
                     + "File sorgente dati: \t\t" + fileSorgente + "\n");
             if (stampaLog) {
                 System.out.println("File di log: \t\t\t" + fileLog);
             }
+            Thread.sleep(1000);
 
             //Riempie il set di comuni dal file dei comuni della regione
             print("\nCaricamento file comuni: ............");
@@ -110,6 +112,7 @@ public class MainETL implements Constants {
             PrintWriter writerTempFile = new PrintWriter(new BufferedWriter(new FileWriter(fileTmp)));
             print("OK\n");
             print(SEPARATOR_LINE);
+            Thread.sleep(1000);
 
             print("CONTROLLO RECORD\n");
             while (stramSourceFile.hasNextLine()) {
@@ -166,10 +169,12 @@ public class MainETL implements Constants {
 
             int mancanti = Controlli.findMissingRecords(fileTmp, fileDW, streamLogFile);
             print("\n");
+            Thread.sleep(1000);
             print("Record analizzati: " + totali + "\n");
             print("Record accettati: " + accettati + "\n");
             print("Record non accettati perche' duplicati: " + duplicati + "\n");
             print("Record non accettati perche' errati: " + errati + "\n");
+            Thread.sleep(1000);
 
             if (stampaLog) {
                 streamLogFile.write("<h3>" + MISSINGS_MESSAGE + "</h3><ul>");
@@ -192,6 +197,7 @@ public class MainETL implements Constants {
             streamLogFile.write(CLOSE);
             streamLogFile.close();
             print(SEPARATOR_LINE);
+            Thread.sleep(1000);
 
         } catch (FileNotFoundException e) {
             System.out.println("Non è stato trovato il file");
