@@ -509,14 +509,14 @@ public class Record {
             warningsRecord.add("Numero di veicolo con conducente inconsistente");
         }
 
-        corretto = verificaConducentiTotaliPerAnni(conducentiTotali, conducentiDa0_14, conducentiDa15_19, conducentiDa20_64, conducentiDa65_piu);
+        corretto = verificaConducentiTotaliPerAnni(incidentiTotali, conducentiDa0_14, conducentiDa15_19, conducentiDa20_64, conducentiDa65_piu);
         if (!corretto) {
-            warningsRecord.add("Numero di conducenti totali inconsistente");
+            warningsRecord.add("Numero di incidenti totali inconsistente");
         }
 
-        corretto = verificaConducentiFeritiPerAnni(conducentiFeriti, conducentiFeritiDa0_14, conducentiFeritiDa15_19, conducentiFeritiDa20_64, conducentiFeritiDa65_piu);
+        corretto = verificaConducentiFeritiPerAnni(incidentiTotali, conducentiFeritiDa0_14, conducentiFeritiDa15_19, conducentiFeritiDa20_64, conducentiFeritiDa65_piu);
         if (!corretto) {
-            warningsRecord.add("Numero di conducenti feriti inconsistente");
+            warningsRecord.add("Numero di incidenti inconsistente");
         }
     }
 
@@ -832,15 +832,15 @@ public class Record {
                 + Integer.parseInt(velocipedi);
     }
 
-    private static boolean verificaConducentiTotaliPerAnni(String conducentiTotali, String conducentiDa0_14, String conducentiDa15_19, String conducentiDa20_64, String conducentiDa65_piu) {
-        return Integer.parseInt(conducentiTotali) >= Integer.parseInt(conducentiDa0_14)
+    private static boolean verificaConducentiTotaliPerAnni(String incidentiTotali, String conducentiDa0_14, String conducentiDa15_19, String conducentiDa20_64, String conducentiDa65_piu) {
+        return Integer.parseInt(incidentiTotali) >= Integer.parseInt(conducentiDa0_14)
                 + Integer.parseInt(conducentiDa15_19)
                 + Integer.parseInt(conducentiDa20_64)
                 + Integer.parseInt(conducentiDa65_piu);
     }
 
-    private static boolean verificaConducentiFeritiPerAnni(String conducentiFeriti, String conducentiFeritiDa0_14, String conducentiFeritiDa15_19, String conducentiFeritiDa20_64, String conducentiFeritiDa65_piu) {
-        return Integer.parseInt(conducentiFeriti) >= Integer.parseInt(conducentiFeritiDa0_14)
+    private static boolean verificaConducentiFeritiPerAnni(String incidentiTotali, String conducentiFeritiDa0_14, String conducentiFeritiDa15_19, String conducentiFeritiDa20_64, String conducentiFeritiDa65_piu) {
+        return Integer.parseInt(incidentiTotali) >= Integer.parseInt(conducentiFeritiDa0_14)
                 + Integer.parseInt(conducentiFeritiDa15_19)
                 + Integer.parseInt(conducentiFeritiDa20_64)
                 + Integer.parseInt(conducentiFeritiDa65_piu);
