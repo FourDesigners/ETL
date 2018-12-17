@@ -5,7 +5,9 @@
  */
 package etlScript;
 
+import static etlScript.Constants.PATH_COMUNI_FILE;
 import static etlScript.Record.verificaAnnoIncidente;
+import java.io.FileNotFoundException;
 import java.util.Calendar;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -24,7 +26,8 @@ public class RecordTest{
     }
     
     @BeforeClass
-    public static void setUpClass() {
+    public static void setUpClass() throws FileNotFoundException {
+        Controlli.fillMunicipalities(PATH_COMUNI_FILE, Controlli.comuni);
     }
     
     @AfterClass
@@ -33,6 +36,7 @@ public class RecordTest{
     
     @Before
     public void setUp() {
+        
     }
     
     @After
@@ -77,6 +81,23 @@ public class RecordTest{
         System.out.println("* test verificaverificaNumero()");
         assertTrue(Record.verificaNumero("3"));
         assertFalse(Record.verificaNumero("-2"));
+    }
+    
+    /**
+     * Test of verificaComune method, of class Record.
+     */
+    @Test
+    public void testVerificaComune() {
+        System.out.println("* test verificaComune()");
+        assertTrue(Record.verificaComune("MILANO", "MILANO"));
+        assertTrue(Record.verificaComune("BORGO PRIOLO", "PAVIA"));
+        assertFalse(Record.verificaComune("BRESCIA", "BRECIA"));
+        assertFalse(Record.verificaComune("BORGO", "PAVIA"));
+        assertFalse(Record.verificaComune("LECO", "LECCO"));
+        assertFalse(Record.verificaComune("MILANO", "NAPOLI"));
+        assertFalse(Record.verificaComune("NAPOLI", "MILANO"));
+        assertFalse(Record.verificaComune("ALTAMURA", "BARI"));
+        
     }
     
 }

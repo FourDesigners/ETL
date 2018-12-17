@@ -556,7 +556,7 @@ public class Record {
         return province.contains(prov);
     }
 
-    private static boolean verificaComune(String comune, String prov) {
+    static boolean verificaComune(String comune, String prov) {
         return Controlli.getComuni().containsKey(prov) && Controlli.getComuni().get(prov).contains(comune);
     }
 

@@ -41,14 +41,35 @@ public class MainETL implements Constants {
     @SuppressWarnings("ConvertToTryWithResources")
     public static void main(String[] args) throws IOException, InterruptedException {
         long start = System.currentTimeMillis();
-        
-        print("\n\n                INIZIO PROCEDURA ETL\n\n");
+        String path_result_file = PATH_RESULT_FILE+ ".csv";
+        Boolean printLog = true;
+
+        switch (args.length) {
+            case (1):
+                if (!args[0].equals("default")) {
+                    path_result_file = args[0];
+                }
+                break;
+            case (2):
+                if (!args[0].equals("default")) {
+                    path_result_file = args[0];
+                }
+                printLog = Boolean.getBoolean(args[1]);
+                break;
+        }
+        if (printLog) {
+            print("\n\n                INIZIO PROCEDURA ETL\n\n");
+        }
         String PATH_LOG_FILE = PATH_RESULT_FILE_RISULTATI + data + ".html";
-        proceduraETL(PATH_RESULT_FILE + ".csv", PATH_TEMP_FILE, PATH_SOURCE_FILE, PATH_LOG_FILE, true);
+
+        proceduraETL(path_result_file , PATH_TEMP_FILE, PATH_SOURCE_FILE, PATH_LOG_FILE, printLog);
+
         long finish = System.currentTimeMillis();
         long timeElapsed = finish - start;
-        System.out.println("PROCEDURA ETL " + timestamp + " TERMINATA");
-        print("Tempo impiegato: " + timeElapsed + " ms\n");
+        if (printLog) {
+            System.out.println("PROCEDURA ETL " + timestamp + " TERMINATA");
+            print("Tempo impiegato: " + timeElapsed + " ms\n");
+        }
 
     }
 
@@ -60,40 +81,36 @@ public class MainETL implements Constants {
             streamLogFile = tempPrinter;
 
             if (stampaLog) {
+                Thread.sleep(1000);
                 streamLogFile.write(INTESTAZIONE_REPORT);
-                //outStream.write(REPORT_MESSAGE + timestamp + "\r\n\r\n");
                 streamLogFile.write("<h1><b>" + REPORT_MESSAGE + timestamp + "</b></h1><br>");
-                //outStream.write(ERROR_MESSAGE + "\r\n");
-            }
-            Thread.sleep(1000);
-            print("File di destinazione procedure: " + fileDW + "\n"
-                    + "File sorgente dati: \t\t" + fileSorgente + "\n");
-            if (stampaLog) {
+                print("File di destinazione procedure: " + fileDW + "\n"
+                        + "File sorgente dati: \t\t" + fileSorgente + "\n");
                 System.out.println("File di log: \t\t\t" + fileLog);
+                Thread.sleep(1000);
+                print("\nCaricamento file comuni: ............");
             }
-            Thread.sleep(1000);
-
-            //Riempie il set di comuni dal file dei comuni della regione
-            print("\nCaricamento file comuni: ............");
+            //Riempie il set di comuni dal file dei comuni della regione            
             Controlli.fillMunicipalities(PATH_COMUNI_FILE, comuni);
-            print("OK\n");
-
+            if (stampaLog) {
+                print("OK\n");
+                print("Caricamento file sorgente dati: .....");
+            }
             //Apre il file proveniente dalla procedura OLTP
             Scanner stramSourceFile = new Scanner(new File(fileSorgente));
-            print("Caricamento file sorgente dati: .....");
             String rigaSourceFile = stramSourceFile.nextLine();
-            print("OK\n");
-
-            print("Controllo intestazione: .............");
+            if (stampaLog) {
+                print("OK\n");
+                print("Controllo intestazione: .............");
+            }
             //controlla l'intestazione del file, lancia eccezione WrongHeaderExceprion se intestazione errata
             Controlli.verificaIntestazione(rigaSourceFile.split(SEPARATOR));
-            print("OK\n");
-
             if (stampaLog) {
+                print("OK\n");
                 streamLogFile.write("<h3>" + ERROR_MESSAGE + "</h3><br><ul>");
-            }
-            //controlla che il file Datawharehouse non esista già 
-            print("Apertura file destinazione: .........");
+                print("Apertura file destinazione: .........");
+            }            //controlla che il file Datawharehouse non esista già 
+
             if (!new File(fileDW).exists()) {
                 //Se non esiste, riempie l'intestazione con i campi scelti nel protocollo
                 PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(fileDW)));
@@ -107,21 +124,23 @@ public class MainETL implements Constants {
                 //se esiste, riempie il set di chiavi esistente che servirà per i controlli
                 Controlli.fillKeys(fileDW);
             }
-            print("OK\n");
-
-            print("Apertura file di appoggio: ..........");
+            if (stampaLog) {
+                print("OK\n");
+                print("Apertura file di appoggio: ..........");
+            }
             PrintWriter writerTempFile = new PrintWriter(new BufferedWriter(new FileWriter(fileTmp)));
-            print("OK\n");
-            print(SEPARATOR_LINE);
-            Thread.sleep(1000);
-
-            print("CONTROLLO RECORD\n");
+            if (stampaLog) {
+                print("OK\n");
+                print(SEPARATOR_LINE);
+                Thread.sleep(1000);
+                print("CONTROLLO RECORD\n");
+            }
             while (stramSourceFile.hasNextLine()) {
                 rigaSourceFile = stramSourceFile.nextLine();
                 String[] campiRigaAnalizzata = rigaSourceFile.split(SEPARATOR);
                 Record record;
                 totali++;
-                if (totali % 1000 == 0) {
+                if (stampaLog && totali % 1000 == 0) {
                     print(".");
                     if (totali % 30000 == 0) {
                         print("\n");
@@ -151,7 +170,9 @@ public class MainETL implements Constants {
                         }
                     } else { //record inconsistente per qualche controllo non andato a buon fine
                         //outStream.write(record.toString() + "\r\n");
-                        streamLogFile.write("<li>" + record.toString() + "</li>");
+                        if (stampaLog) {
+                            streamLogFile.write("<li>" + record.toString() + "</li>");
+                        }
                         errati++;
                     }
                 } else { //record incoerente con il protocollo
@@ -159,46 +180,44 @@ public class MainETL implements Constants {
                     //todo gestione riga incoerente protocol
                     record = new Record();
                     record.addError("Numero di colonne errato");
-                    streamLogFile.write(record.toString() + "\r\n");
+                    if (stampaLog) {
+                        streamLogFile.write(record.toString() + "\r\n");
+                    }
                 }
             }
 
             //scansione delle righe del file terminata, chiusura degli stream
-            streamLogFile.write("</ul>");
             writerTempFile.close();
             stramSourceFile.close();
-
             int mancanti = Controlli.findMissingRecords(fileTmp, fileDW, streamLogFile);
-            print("\n");
-            Thread.sleep(1000);
-            print("Record analizzati: " + totali + "\n");
-            print("Record accettati: " + accettati + "\n");
-            print("Record non accettati perche' duplicati: " + duplicati + "\n");
-            print("Record non accettati perche' errati: " + errati + "\n");
-            Thread.sleep(1000);
-
             if (stampaLog) {
+                streamLogFile.write("</ul>");
+                print("\n");
+                Thread.sleep(1000);
+                print("Record analizzati: " + totali + "\n");
+                print("Record accettati: " + accettati + "\n");
+                print("Record non accettati perche' duplicati: " + duplicati + "\n");
+                print("Record non accettati perche' errati: " + errati + "\n");
+                Thread.sleep(1000);
+
                 streamLogFile.write("<h3>" + MISSINGS_MESSAGE + "</h3><ul>");
                 streamLogFile.write("Numero righe accettate : " + accettati + "<br>");
                 streamLogFile.write("Numero righe duplicate : " + duplicati + "<br>");
                 streamLogFile.write("Numero righe rifiutate : " + errati + "<br>");
                 streamLogFile.write("Numero righe mancanti : " + mancanti + "<br>");
+
+                print("Caricamento nuovi record nel file destinazione.......");
             }
 
-            //mancanti = findMissingRecords2("Files/temp_demo.csv", "Files/new_incidenti_demo.csv", comuni); //controlla se ci sono righe mancanti
-            //outStream.write("\r\n" + MISSINGS_MESSAGE + "\r\n");
-            print("Caricamento nuovi record nel file destinazione.......");
             update(fileTmp, fileDW); //aggiunge le nuove righe al file dest
-            print("OK\n");
-            //outStream.write("Numero righe accettate : " + accettati + "\r\n");
-            //outStream.write("Numero righe duplicate : " + duplicati + "\r\n");
-            //outStream.write("Numero righe rifiutate : " + errati + "\r\n");
-            //outStream.write("Numero righe mancanti : " + mancanti + "\r\n");
 
             streamLogFile.write(CLOSE);
             streamLogFile.close();
-            print(SEPARATOR_LINE);
-            Thread.sleep(1000);
+            if (stampaLog) {
+                print("OK\n");
+                print(SEPARATOR_LINE);
+                Thread.sleep(1000);
+            }
 
         } catch (FileNotFoundException e) {
             System.out.println("Non è stato trovato il file");
