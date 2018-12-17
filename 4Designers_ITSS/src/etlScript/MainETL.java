@@ -6,6 +6,7 @@
 package etlScript;
 
 import eccezioni.WrongHeaderException;
+import static etlScript.Controlli.comuni;
 import four.designers.etl.Timestamp;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -74,7 +75,7 @@ public class MainETL implements Constants {
 
             //Riempie il set di comuni dal file dei comuni della regione
             print("\nCaricamento file comuni: ............");
-            Controlli.fillMunicipalities(PATH_COMUNI_FILE);
+            Controlli.fillMunicipalities(PATH_COMUNI_FILE, comuni);
             print("OK\n");
 
             //Apre il file proveniente dalla procedura OLTP

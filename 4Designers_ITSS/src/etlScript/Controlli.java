@@ -36,8 +36,7 @@ public class Controlli {
         while(!split[0].equals(Constants.CAMPI_OLTP[0]) && count<3){
             split[0] = split[0].substring(1);
             count++;
-        }
-       
+        }       
         
         for (int i = 0; i < Constants.CAMPI_OLTP.length; i++) {
             if (!Constants.CAMPI_OLTP[i].equals(split[i])) {
@@ -67,17 +66,17 @@ public class Controlli {
         chiavi.add(chiave);
     }
 
-    static void fillMunicipalities(String fileComuni) throws FileNotFoundException {
+    static void fillMunicipalities(String fileComuni, Map<String, Set<String>> mapComuni) throws FileNotFoundException {
 
         try (Scanner inputStream = new Scanner(new File(fileComuni))) {
             while (inputStream.hasNextLine()) {
                 String rigaComune = inputStream.nextLine();
                 String[] campiComune = rigaComune.split(SEPARATOR);
-                if (comuni.containsKey(campiComune[0])) {
-                    comuni.get(campiComune[0]).add(campiComune[1]);
+                if (mapComuni.containsKey(campiComune[0])) {
+                    mapComuni.get(campiComune[0]).add(campiComune[1]);
                 } else {
-                    comuni.put(campiComune[0], new HashSet<>());
-                    comuni.get(campiComune[0]).add(campiComune[1]);
+                    mapComuni.put(campiComune[0], new HashSet<>());
+                    mapComuni.get(campiComune[0]).add(campiComune[1]);
                 }
             }
 

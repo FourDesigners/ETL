@@ -5,6 +5,7 @@
  */
 package etlScript;
 
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -16,7 +17,7 @@ import java.util.Set;
 public class Record {
 
     private static final String ANNO_INIZIALE = "2000";
-    private static final String ANNO_FINALE = "2099";
+    private static final String ANNO_FINALE = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
     private static int count = 2;
     private final int idRecord;
     private String annoIncidente;
@@ -175,7 +176,7 @@ public class Record {
     }
 
     public String[] setNewCampi() {
-        
+
         String[] newCampi = new String[3];
         Integer tot_incidenti_nonmortali = Integer.parseInt(incidentiTotali) - Integer.parseInt(incidentiMortali);
         Integer conduc_maschi = Integer.parseInt(conducentiTotali) - Integer.parseInt(conducentiDonne);
@@ -533,7 +534,7 @@ public class Record {
         return "Record{" + "riga=" + idRecord + ", errori=" + erroriRecord + ", warnings=" + warningsRecord + '}';
     }
 
-    private static boolean verificaAnnoIncidente(String annoIncidente) {
+    static boolean verificaAnnoIncidente(String annoIncidente) {
         return annoIncidente.compareTo(ANNO_INIZIALE) >= 0 && annoIncidente.compareTo(ANNO_FINALE) <= 0;
     }
 
@@ -559,7 +560,7 @@ public class Record {
         return Controlli.getComuni().containsKey(prov) && Controlli.getComuni().get(prov).contains(comune);
     }
 
-    private static boolean verificaNumero(String s) {
+    static boolean verificaNumero(String s) {
         int num;
         try {
             num = Integer.parseInt(s);
@@ -777,13 +778,13 @@ public class Record {
         return verificaNumero(velocipedi);
     }
 
-    private static boolean verificaIncidentiPerTipologia(String incidentiTotali, String incidentiMarcia, String incidentiVeicoloPedone, String incidentiIsolati) {
+    public static boolean verificaIncidentiPerTipologia(String incidentiTotali, String incidentiMarcia, String incidentiVeicoloPedone, String incidentiIsolati) {
         return Integer.parseInt(incidentiTotali) >= Integer.parseInt(incidentiMarcia)
                 + Integer.parseInt(incidentiVeicoloPedone)
                 + Integer.parseInt(incidentiIsolati);
     }
 
-    private static boolean verificaIncidentiPerLuogo(String incidentiTotali, String incidentiStradeUrbane, String incidentiStradeExtra, String incidentiAutostrada) {
+    static boolean verificaIncidentiPerLuogo(String incidentiTotali, String incidentiStradeUrbane, String incidentiStradeExtra, String incidentiAutostrada) {
         return Integer.parseInt(incidentiTotali) >= Integer.parseInt(incidentiStradeUrbane)
                 + Integer.parseInt(incidentiStradeExtra)
                 + Integer.parseInt(incidentiAutostrada);

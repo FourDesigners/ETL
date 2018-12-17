@@ -9,20 +9,21 @@ package eccezioni;
  *
  * @author FourDesigners
  */
-public class WrongHeaderException extends Exception{
-    
-    private final String errore; 
-    
-    public WrongHeaderException(){
-    errore="Esecuzione interrotta, intestazione non conforme al protocollo";
+public class WrongHeaderException extends Exception {
+
+    private final String errore;
+
+    public WrongHeaderException() {
+        errore = "Esecuzione interrotta, intestazione non conforme al protocollo";
     }
-    public WrongHeaderException(int i){
-        errore="Esecuzione interrotta, il campo "+i+" dell'intestazione non è conforme al protocollo";
+
+    public WrongHeaderException(int i) {
+        errore = "Esecuzione interrotta, il campo " + i + " dell'intestazione non è conforme al protocollo";
     }
-    
+
     @Override
-    public String toString(){
+    public String toString() {
         return errore;
     }
-         
+
 }
