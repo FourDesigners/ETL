@@ -69,6 +69,7 @@ public class ControlliTest {
         try (Scanner stream = new Scanner(new File(LOCAL_PATH + "csv_test_Intestazione/intestazione_corta.csv"));) {
             String rigaSourceFile = stream.nextLine();
             Controlli.verificaIntestazione(rigaSourceFile.split(SEPARATOR));
+            throw new Exception();
         } catch (WrongHeaderException e) {
             assertEquals(e.toString(), "Esecuzione interrotta, intestazione non conforme al protocollo");
         }
@@ -76,6 +77,7 @@ public class ControlliTest {
         try (Scanner stream = new Scanner(new File(LOCAL_PATH + "csv_test_Intestazione/intestazione_lunga.csv"));) {
             String rigaSourceFile = stream.nextLine();
             Controlli.verificaIntestazione(rigaSourceFile.split(SEPARATOR));
+            throw new Exception();
         } catch (WrongHeaderException e) {
             assertEquals(e.toString(), "Esecuzione interrotta, intestazione non conforme al protocollo");
         }
@@ -83,6 +85,7 @@ public class ControlliTest {
         try (Scanner stream = new Scanner(new File(LOCAL_PATH + "csv_test_Intestazione/intestazione_campo_2_errato.csv"));) {
             String rigaSourceFile = stream.nextLine();
             Controlli.verificaIntestazione(rigaSourceFile.split(SEPARATOR));
+            throw new Exception();
         } catch (WrongHeaderException e) {
             assertEquals(e.toString(), "Esecuzione interrotta, il campo 2 dell'intestazione non è conforme al protocollo");
         }
@@ -90,6 +93,7 @@ public class ControlliTest {
         try (Scanner stream = new Scanner(new File(LOCAL_PATH + "csv_test_Intestazione/intestazione_campo_6-9_errato.csv"));) {
             String rigaSourceFile = stream.nextLine();
             Controlli.verificaIntestazione(rigaSourceFile.split(SEPARATOR));
+            throw new Exception();
         } catch (WrongHeaderException e) {
             assertEquals(e.toString(), "Esecuzione interrotta, il campo 6 dell'intestazione non è conforme al protocollo");
         }

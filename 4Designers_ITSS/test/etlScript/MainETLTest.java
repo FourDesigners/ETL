@@ -5,6 +5,7 @@
  */
 package etlScript;
 
+import eccezioni.WrongHeaderException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import org.junit.After;
@@ -47,7 +48,7 @@ public class MainETLTest {
         fileRisultato.delete();
         File fileTemp = new File(FILE_TEMP_TEST);
         fileTemp.delete();
-        File fileLog = new File(LOCAL_PATH+"log.html");
+        File fileLog = new File(LOCAL_PATH + "log.html");
         fileLog.delete();
     }
 
@@ -55,11 +56,83 @@ public class MainETLTest {
      * Test of proceduraETL method, of class MainETL.
      */
     @Test
-    public void testProceduraETL() throws Exception {
-        System.out.println("* test proceduraETL()");
-        MainETL.proceduraETL(FILE_RISULTATO_TEST, FILE_TEMP_TEST, LOCAL_PATH_SORGENTI+"sorgente_corretto.csv",LOCAL_PATH+"log.html", false);
-        assertTrue(MainETL.accettati==11 && MainETL.duplicati==0 && MainETL.errati == 0);
+    public void testProceduraETLSuNumeroRecord() throws Exception {
+        System.out.println("* test proceduraETLSuNumeroRecord()");
+        MainETL.proceduraETL(FILE_RISULTATO_TEST, FILE_TEMP_TEST,
+                LOCAL_PATH_SORGENTI + "1_sorgente_corretto_A11_D0_E0.csv",
+                LOCAL_PATH + "log.html", false);
+        assertTrue(MainETL.accettati == 11 && MainETL.duplicati == 0 && MainETL.errati == 0);
+        //In sequenza senza pulizia file perchè i risultati della successiva dipendono
+        //dal caricamento di quella precedente
+        MainETL.proceduraETL(FILE_RISULTATO_TEST, FILE_TEMP_TEST,
+                LOCAL_PATH_SORGENTI + "2_sorgente_corretto_A4_D7_E0.csv",
+                LOCAL_PATH + "log.html", false);
+        assertTrue(MainETL.accettati == 4 && MainETL.duplicati == 7 && MainETL.errati == 0);
+
+        (new File(FILE_RISULTATO_TEST)).delete();
+        (new File(FILE_TEMP_TEST)).delete();
+        Controlli.chiavi.clear();
+
+        MainETL.proceduraETL(FILE_RISULTATO_TEST, FILE_TEMP_TEST,
+                LOCAL_PATH_SORGENTI + "3_sorgente_corretto_A4_D0_E7.csv",
+                LOCAL_PATH + "log.html", false);
+        assertTrue(MainETL.accettati == 4 && MainETL.duplicati == 0 && MainETL.errati == 7);
+        //In sequenza senza pulizia file perchè i risultati della successiva dipendono
+        //dal caricamento di quella precedente
+        MainETL.proceduraETL(FILE_RISULTATO_TEST, FILE_TEMP_TEST,
+                LOCAL_PATH_SORGENTI + "4_sorgente_corretto_A4_D4_E4.csv",
+                LOCAL_PATH + "log.html", true);
+        assertTrue(MainETL.accettati == 4 && MainETL.duplicati == 4 && MainETL.errati == 5);
+        
+        (new File(FILE_RISULTATO_TEST)).delete();
+        (new File(FILE_TEMP_TEST)).delete();
+        Controlli.chiavi.clear();
+
     }
 
+    @Test
+    public void testProceduraETLSuIntestazioneErrata() throws Exception {
+        System.out.println("* test proceduraETLuIntestazioneErrata()");
+        try {
+            MainETL.proceduraETL(FILE_RISULTATO_TEST, FILE_TEMP_TEST,
+                    LOCAL_PATH + "csv_test_Intestazione/intestazione_corta.csv",
+                    LOCAL_PATH + "log.html", false);
+            throw new Exception();
+        } catch (WrongHeaderException e) {
+            assertEquals(e.toString(),
+                    "Esecuzione interrotta, intestazione non conforme al protocollo");
+        }
+
+        try {
+            MainETL.proceduraETL(FILE_RISULTATO_TEST, FILE_TEMP_TEST,
+                    LOCAL_PATH + "csv_test_Intestazione/intestazione_lunga.csv",
+                    LOCAL_PATH + "log.html", false);
+            throw new Exception();
+        } catch (WrongHeaderException e) {
+            assertEquals(e.toString(),
+                    "Esecuzione interrotta, intestazione non conforme al protocollo");
+        }
+
+        try {
+            MainETL.proceduraETL(FILE_RISULTATO_TEST, FILE_TEMP_TEST,
+                    LOCAL_PATH + "csv_test_Intestazione/intestazione_campo_2_errato.csv",
+                    LOCAL_PATH + "log.html", false);
+            throw new Exception();
+        } catch (WrongHeaderException e) {
+            assertEquals(e.toString(),
+                    "Esecuzione interrotta, il campo 2 dell'intestazione non è conforme al protocollo");
+        }
+
+        try {
+            MainETL.proceduraETL(FILE_RISULTATO_TEST, FILE_TEMP_TEST,
+                    LOCAL_PATH + "csv_test_Intestazione/intestazione_campo_6-9_errato.csv",
+                    LOCAL_PATH + "log.html", false);
+            throw new Exception();
+        } catch (WrongHeaderException e) {
+            assertEquals(e.toString(),
+                    "Esecuzione interrotta, il campo 6 dell'intestazione non è conforme al protocollo");
+        }
+
+    }
 
 }

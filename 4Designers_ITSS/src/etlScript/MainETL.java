@@ -30,10 +30,10 @@ import java.util.logging.Logger;
  */
 public class MainETL implements Constants {
 
-    static int duplicati = 0;
-    static int errati = 0;
-    static int accettati = 0;
-    static int totali = 0;
+    static int duplicati;
+    static int errati;
+    static int accettati;
+    static int totali;
     static Timestamp mTimestamp = new Timestamp();
     static String data = mTimestamp.getData();
     static String timestamp = mTimestamp.getTimestamp();
@@ -41,7 +41,7 @@ public class MainETL implements Constants {
     @SuppressWarnings("ConvertToTryWithResources")
     public static void main(String[] args) throws IOException, InterruptedException {
         long start = System.currentTimeMillis();
-        String path_result_file = PATH_RESULT_FILE+ ".csv";
+        String path_result_file = PATH_RESULT_FILE + ".csv";
         Boolean printLog = true;
 
         switch (args.length) {
@@ -62,7 +62,12 @@ public class MainETL implements Constants {
         }
         String PATH_LOG_FILE = PATH_RESULT_FILE_RISULTATI + data + ".html";
 
-        proceduraETL(path_result_file , PATH_TEMP_FILE, PATH_SOURCE_FILE, PATH_LOG_FILE, printLog);
+        try {
+            proceduraETL(path_result_file, PATH_TEMP_FILE, PATH_SOURCE_FILE, PATH_LOG_FILE, printLog);
+        } catch (WrongHeaderException ex) {
+           print("\n\n"+ex);
+           
+        }
 
         long finish = System.currentTimeMillis();
         long timeElapsed = finish - start;
@@ -73,9 +78,13 @@ public class MainETL implements Constants {
 
     }
 
-    public static void proceduraETL(String fileDW, String fileTmp, String fileSorgente, String fileLog, Boolean stampaLog) throws IOException, InterruptedException {
+    public static void proceduraETL(String fileDW, String fileTmp, String fileSorgente, String fileLog, Boolean stampaLog) throws IOException, InterruptedException, WrongHeaderException {
 
         PrintWriter streamLogFile;
+        duplicati=0;
+        accettati=0;
+        errati=0;
+        totali=0;
 
         try (PrintWriter tempPrinter = new PrintWriter(new BufferedWriter(new FileWriter(fileLog)))) {
             streamLogFile = tempPrinter;
@@ -219,14 +228,6 @@ public class MainETL implements Constants {
                 Thread.sleep(1000);
             }
 
-        } catch (FileNotFoundException e) {
-            System.out.println("Non è stato trovato il file");
-
-            //Todo gestione throw impossibile aprire file datawharehouse
-            //Todo gestire throw file comuni non presente
-        } catch (WrongHeaderException ex) {
-            System.out.print("FALLITO");
-            System.out.println(ex);
         } catch (IOException e) {
             System.out.println("Io exception");
         }
@@ -243,6 +244,7 @@ public class MainETL implements Constants {
         }
         fw.close();
         inputStream.close();
+        (new File(source)).delete();
     }
 
     public static void print(String s) {

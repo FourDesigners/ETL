@@ -35,8 +35,7 @@ public class RecordTest{
     }
     
     @Before
-    public void setUp() {
-        
+    public void setUp() {   
     }
     
     @After
@@ -44,20 +43,11 @@ public class RecordTest{
     }
 
     /**
-     * Test of create method, of class Record.
-     */
-    @Test
-    public void testCreate() {
-    }
-
-
-
-
-    /**
      * Test of verificaRecord method, of class Record.
      */
     @Test
     public void testVerificaRecord() {
+        //Forse da fare
     }
 
 
