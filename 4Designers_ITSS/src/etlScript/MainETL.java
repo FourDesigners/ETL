@@ -43,10 +43,9 @@ public class MainETL implements Constants {
         long start = System.currentTimeMillis();
         String path_result_file = PATH_RESULT_FILE + ".csv";
         Boolean printLog = true;
-
         switch (args.length) {
             case (1):
-                if (!args[0].equals("default")) {
+                if (args[0] != null && !args[0].equals("default")) {
                     path_result_file = args[0];
                 }
                 break;
@@ -207,6 +206,7 @@ public class MainETL implements Constants {
                 print("Record accettati: " + accettati + "\n");
                 print("Record non accettati perche' duplicati: " + duplicati + "\n");
                 print("Record non accettati perche' errati: " + errati + "\n");
+                print("Record mancanti: "+mancanti+"\n");
                 Thread.sleep(1000);
 
                 streamLogFile.write("<h3>" + MISSINGS_MESSAGE + "</h3><ul>");
