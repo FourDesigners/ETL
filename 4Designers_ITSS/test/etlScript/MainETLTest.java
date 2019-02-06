@@ -82,7 +82,7 @@ public class MainETLTest {
         MainETL.proceduraETL(FILE_RISULTATO_TEST, FILE_TEMP_TEST,
                 LOCAL_PATH_SORGENTI + "4_sorgente_corretto_A4_D4_E4.csv",
                 LOCAL_PATH + "log.html", true);
-        assertTrue(MainETL.accettati == 4 && MainETL.duplicati == 4 && MainETL.errati == 5);
+        assertTrue(MainETL.accettati == 4 && MainETL.duplicati == 3 && MainETL.errati == 5);
         
         (new File(FILE_RISULTATO_TEST)).delete();
         (new File(FILE_TEMP_TEST)).delete();

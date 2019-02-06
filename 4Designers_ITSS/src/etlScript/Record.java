@@ -84,7 +84,7 @@ public class Record {
         warningsRecord = new HashSet<>();
     }
 
-    private Record(String annoIncidente, String prov, String comune, String incidentiTotali, String incidentiMortali,
+    public Record(String annoIncidente, String prov, String comune, String incidentiTotali, String incidentiMortali,
             String feritiTotali, String mortiTotali, String veicoliConConducente, String veicoliSenzaConducente, String conducentiTotali,
             String conducentiDonne, String conducentiFeriti, String conducentiMortiInGiornata, String conducentiIgnoti, String conducentiDa0_14,
             String conducentiDa15_19, String conducentiDa20_64, String conducentiDa65_piu, String conducentiFeritiDa0_14, String conducentiFeritiDa15_19,

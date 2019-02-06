@@ -37,7 +37,6 @@ public class Main {
                     System.out.print("\nElenco comandi: \n");
                     System.out.print("Comando: (1) eseguire procedura ETL con impostazioni di default\n");
                     System.out.print("Comando: (2) eseguire la procedura ETL selezionando un file\n");
-                    System.out.print("Comando: (3) esegue i test sulla procedura\n");
                     System.out.print("Comando: (0) Chiudi la procedura\n");
                     System.out.print("\nInserisci un comando: ");
                     s = scanner.nextInt();
@@ -61,7 +60,6 @@ public class Main {
                             System.out.print("\nIl file che hai indicato non esiste o non è nel path corrente.\n\n");
                         }
                         break;
-                    case 3:
                     case 0:
                         System.out.print("\nChiusura procedura.\n\n");
                         break;

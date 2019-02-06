@@ -42,14 +42,6 @@ public class RecordTest{
     public void tearDown() {
     }
 
-    /**
-     * Test of verificaRecord method, of class Record.
-     */
-    @Test
-    public void testVerificaRecord() {
-        //Forse da fare
-    }
-
 
     
     /**
@@ -61,6 +53,7 @@ public class RecordTest{
         assertTrue(verificaAnnoIncidente("2002"));
         assertFalse(verificaAnnoIncidente("1998"));
         assertFalse(verificaAnnoIncidente(String.valueOf(Calendar.getInstance().get(Calendar.YEAR))+1));
+        assertFalse(verificaAnnoIncidente("c"));
     }
     
     /**
@@ -71,6 +64,7 @@ public class RecordTest{
         System.out.println("* test verificaverificaNumero()");
         assertTrue(Record.verificaNumero("3"));
         assertFalse(Record.verificaNumero("-2"));
+        assertFalse(Record.verificaNumero("a"));
     }
     
     /**
@@ -87,6 +81,16 @@ public class RecordTest{
         assertFalse(Record.verificaComune("MILANO", "NAPOLI"));
         assertFalse(Record.verificaComune("NAPOLI", "MILANO"));
         assertFalse(Record.verificaComune("ALTAMURA", "BARI"));
+        assertFalse(Record.verificaComune("2", "MILANO"));
+        assertFalse(Record.verificaComune("MILANO", "4"));
+        
+    }
+    
+    /**
+     * Test of verificaRecord method, of class Record.
+     */
+    @Test
+    public void testVerificaRecord() {
         
     }
     
