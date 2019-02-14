@@ -43,17 +43,18 @@ public class Main {
                 }
                 switch (s) {
                     case 1:
-                        MainETL.main(new String[1]);
+                        String[] strDefault ={"default"};
+                        MainETL.main(strDefault);
                         s = 0;
                         break;
                     case 2:
                         System.out.print("\nInserisci il file da utilizzare: ");
                         Scanner scanner2 = new Scanner(System.in);
                         String s2 = scanner2.nextLine();
-                        File tmpDir = new File(s2);
+                        File tmpDir = new File("Files/"+s2);
                         boolean exists = tmpDir.exists();
                         if (exists) {
-                            String[] path = {s2};
+                            String[] path = {"Files/"+s2};
                             MainETL.main(path);
                             s = 0;
                         } else {

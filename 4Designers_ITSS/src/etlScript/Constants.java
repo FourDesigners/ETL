@@ -12,9 +12,9 @@ package etlScript;
 public interface Constants {
 
     static final String PATH_COMUNI_FILE = "Files/comuni.csv";
-    static final String PATH_SOURCE_FILE = "Files/sorgente.csv";
+    static final String PATH_DATA_FROM_OLTP_FILE = "Files/data_from_oltp.csv";
     static final String PATH_TEMP_FILE = "Files/temp.csv";
-    static final String PATH_RESULT_FILE = "Files/risultato";
+    static final String PATH_DW_FILE = "Files/dw.csv";
     static final String PATH_RESULT_FILE_RISULTATI = "Files/Risultati/risultato";
 
     static final String INTESTAZIONE_REPORT = "<html><head><title>Procedura ETL</title></head><body style=\"background-color:lavender\";>";
@@ -23,7 +23,7 @@ public interface Constants {
     static final String REPORT_MESSAGE = "PROCEDURA ETL TERMINATA<br>DATA : ";
     static final String ERROR_MESSAGE = "ERRORI : ";
     static final String MISSINGS_MESSAGE = "RECORD MANCANTI : ";
-    static final String HEADER_ERROR = "Intestazione di " + PATH_SOURCE_FILE + " errata";
+    static final String HEADER_ERROR = "Intestazione di " + PATH_DATA_FROM_OLTP_FILE + " errata";
     static final String SEPARATOR = ";";
     static final int N_COLONNE = 55;
 

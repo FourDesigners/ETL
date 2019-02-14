@@ -41,17 +41,20 @@ public class MainETL implements Constants {
     @SuppressWarnings("ConvertToTryWithResources")
     public static void main(String[] args) throws IOException, InterruptedException {
         long start = System.currentTimeMillis();
-        String path_result_file = PATH_RESULT_FILE + ".csv";
+        String path_data_from_OLTP_file = "";
         Boolean printLog = true;
         switch (args.length) {
             case (1):
+                if (args[0].equals("default")) {
+                    path_data_from_OLTP_file = PATH_DATA_FROM_OLTP_FILE;
+                }
                 if (args[0] != null && !args[0].equals("default")) {
-                    path_result_file = args[0];
+                    path_data_from_OLTP_file += args[0];
                 }
                 break;
             case (2):
                 if (!args[0].equals("default")) {
-                    path_result_file = args[0];
+                    path_data_from_OLTP_file += args[0];
                 }
                 printLog = Boolean.getBoolean(args[1]);
                 break;
@@ -62,10 +65,9 @@ public class MainETL implements Constants {
         String PATH_LOG_FILE = PATH_RESULT_FILE_RISULTATI + data + ".html";
 
         try {
-            proceduraETL(path_result_file, PATH_TEMP_FILE, PATH_SOURCE_FILE, PATH_LOG_FILE, printLog);
+            proceduraETL(PATH_DW_FILE, PATH_TEMP_FILE, path_data_from_OLTP_file, PATH_LOG_FILE, printLog);
         } catch (WrongHeaderException ex) {
-           print("\n\n"+ex);
-           
+        //fa terminare la procedura
         }
 
         long finish = System.currentTimeMillis();
@@ -77,13 +79,13 @@ public class MainETL implements Constants {
 
     }
 
-    public static void proceduraETL(String fileDW, String fileTmp, String fileSorgente, String fileLog, Boolean stampaLog) throws IOException, InterruptedException, WrongHeaderException {
+    public static void proceduraETL(String fileDW, String fileTmp, String fileDataOLTP, String fileLog, Boolean stampaLog) throws IOException, InterruptedException, WrongHeaderException {
 
         PrintWriter streamLogFile;
-        duplicati=0;
-        accettati=0;
-        errati=0;
-        totali=0;
+        duplicati = 0;
+        accettati = 0;
+        errati = 0;
+        totali = 0;
 
         try (PrintWriter tempPrinter = new PrintWriter(new BufferedWriter(new FileWriter(fileLog)))) {
             streamLogFile = tempPrinter;
@@ -93,7 +95,7 @@ public class MainETL implements Constants {
                 streamLogFile.write(INTESTAZIONE_REPORT);
                 streamLogFile.write("<h1><b>" + REPORT_MESSAGE + timestamp + "</b></h1><br>");
                 print("File di destinazione procedure: " + fileDW + "\n"
-                        + "File sorgente dati: \t\t" + fileSorgente + "\n");
+                        + "File sorgente dati: \t\t" + fileDataOLTP + "\n");
                 System.out.println("File di log: \t\t\t" + fileLog);
                 Thread.sleep(1000);
                 print("\nCaricamento file comuni: ............");
@@ -105,14 +107,19 @@ public class MainETL implements Constants {
                 print("Caricamento file sorgente dati: .....");
             }
             //Apre il file proveniente dalla procedura OLTP
-            Scanner stramSourceFile = new Scanner(new File(fileSorgente));
-            String rigaSourceFile = stramSourceFile.nextLine();
             if (stampaLog) {
                 print("OK\n");
                 print("Controllo intestazione: .............");
             }
-            //controlla l'intestazione del file, lancia eccezione WrongHeaderExceprion se intestazione errata
-            Controlli.verificaIntestazione(rigaSourceFile.split(SEPARATOR));
+            Scanner stramSourceFile = new Scanner(new File(fileDataOLTP));
+            String rigaSourceFile = stramSourceFile.nextLine();
+            try {
+                //controlla l'intestazione del file, lancia eccezione WrongHeaderExceprion se intestazione errata
+                Controlli.verificaIntestazione(rigaSourceFile.split(SEPARATOR));
+            } catch (WrongHeaderException ex) {
+                print("ERRORE\nIntestazione errata, chiusura procedura.\n\n");
+                throw new WrongHeaderException();
+            }
             if (stampaLog) {
                 print("OK\n");
                 streamLogFile.write("<h3>" + ERROR_MESSAGE + "</h3><br><ul>");
@@ -207,7 +214,7 @@ public class MainETL implements Constants {
                 print("Record accettati: " + accettati + "\n");
                 print("Record non accettati perche' duplicati: " + duplicati + "\n");
                 print("Record non accettati perche' errati: " + errati + "\n");
-                print("Record mancanti: "+mancanti+"\n");
+                print("Record mancanti: " + mancanti + "\n");
                 Thread.sleep(1000);
 
                 streamLogFile.write("Numero righe accettate : " + accettati + "<br>");
