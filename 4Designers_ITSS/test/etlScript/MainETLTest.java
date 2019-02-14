@@ -120,7 +120,7 @@ public class MainETLTest {
             throw new Exception();
         } catch (WrongHeaderException e) {
             assertEquals(e.toString(),
-                    "Esecuzione interrotta, il campo 2 dell'intestazione non è conforme al protocollo");
+                    "Esecuzione interrotta, intestazione non conforme al protocollo");
         }
 
         try {
@@ -130,7 +130,7 @@ public class MainETLTest {
             throw new Exception();
         } catch (WrongHeaderException e) {
             assertEquals(e.toString(),
-                    "Esecuzione interrotta, il campo 6 dell'intestazione non è conforme al protocollo");
+                    "Esecuzione interrotta, intestazione non conforme al protocollo");
         }
 
     }
