@@ -197,6 +197,7 @@ public class MainETL implements Constants {
             //scansione delle righe del file terminata, chiusura degli stream
             writerTempFile.close();
             stramSourceFile.close();
+            streamLogFile.write("<h3>" + MISSINGS_MESSAGE + "</h3><ul>");
             int mancanti = Controlli.findMissingRecords(fileTmp, fileDW, streamLogFile);
             if (stampaLog) {
                 streamLogFile.write("</ul>");
@@ -209,7 +210,6 @@ public class MainETL implements Constants {
                 print("Record mancanti: "+mancanti+"\n");
                 Thread.sleep(1000);
 
-                streamLogFile.write("<h3>" + MISSINGS_MESSAGE + "</h3><ul>");
                 streamLogFile.write("Numero righe accettate : " + accettati + "<br>");
                 streamLogFile.write("Numero righe duplicate : " + duplicati + "<br>");
                 streamLogFile.write("Numero righe rifiutate : " + errati + "<br>");

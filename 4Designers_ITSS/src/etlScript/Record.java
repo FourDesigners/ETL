@@ -779,71 +779,119 @@ public class Record {
     }
 
     public static boolean verificaIncidentiPerTipologia(String incidentiTotali, String incidentiMarcia, String incidentiVeicoloPedone, String incidentiIsolati) {
-        return Integer.parseInt(incidentiTotali) >= Integer.parseInt(incidentiMarcia)
+        try {
+            return Integer.parseInt(incidentiTotali) >= Integer.parseInt(incidentiMarcia)
                 + Integer.parseInt(incidentiVeicoloPedone)
                 + Integer.parseInt(incidentiIsolati);
+        }catch (NumberFormatException e) {
+            return false;
+        }
+        
     }
 
     static boolean verificaIncidentiPerLuogo(String incidentiTotali, String incidentiStradeUrbane, String incidentiStradeExtra, String incidentiAutostrada) {
-        return Integer.parseInt(incidentiTotali) >= Integer.parseInt(incidentiStradeUrbane)
+        try {
+            return Integer.parseInt(incidentiTotali) >= Integer.parseInt(incidentiStradeUrbane)
                 + Integer.parseInt(incidentiStradeExtra)
                 + Integer.parseInt(incidentiAutostrada);
+        }catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     private static boolean verificaIncidentiPerGiorni(String incidentiTotali, String incidentiFeriali, String incidentiWeekend) {
-        return Integer.parseInt(incidentiTotali) == Integer.parseInt(incidentiFeriali)
+        try {
+            return Integer.parseInt(incidentiTotali) == Integer.parseInt(incidentiFeriali)
                 + Integer.parseInt(incidentiWeekend);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+       
     }
 
     private static boolean verificaIncidentiPerOrario(String incidentiTotali, String incidentiGiorno, String incidentiNotte) {
-        return Integer.parseInt(incidentiTotali) >= Integer.parseInt(incidentiGiorno)
+        try {
+            return Integer.parseInt(incidentiTotali) >= Integer.parseInt(incidentiGiorno)
                 + Integer.parseInt(incidentiNotte);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        
     }
 
     private static boolean verificaIncidentiPerOreDiPunta(String incidentiTotali, String incidentiDa7_9, String incidentiDa17_19) {
-        return Integer.parseInt(incidentiTotali) >= Integer.parseInt(incidentiDa7_9)
+        try {
+            return Integer.parseInt(incidentiTotali) >= Integer.parseInt(incidentiDa7_9)
                 + Integer.parseInt(incidentiDa17_19);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        
     }
 
     private static boolean verificaIncidentiPerMeteo(String incidentiTotali, String incidentiSereno, String incidentiNebbia, String incidentiPioggiaNeve) {
-        return Integer.parseInt(incidentiTotali) >= Integer.parseInt(incidentiSereno)
+        try {
+            return Integer.parseInt(incidentiTotali) >= Integer.parseInt(incidentiSereno)
                 + Integer.parseInt(incidentiNebbia)
                 + Integer.parseInt(incidentiPioggiaNeve);
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     private static boolean verificaFeriti(String feritiTotali, String conducentiFeriti, String passeggeriFeriti, String pedoniFeriti) {
-        return Integer.parseInt(feritiTotali) >= Integer.parseInt(conducentiFeriti)
+        try {
+            return Integer.parseInt(feritiTotali) >= Integer.parseInt(conducentiFeriti)
                 + Integer.parseInt(passeggeriFeriti)
                 + Integer.parseInt(pedoniFeriti);
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     private static boolean verificaMorti(String mortiTotali, String conducentiMortiDa0_14, String conducentiMortiDa15_19, String conducentiMortiDa20_64, String conducentiMortiDa65_piu, String passeggeriMorti, String pedoniMorti) {
-        return Integer.parseInt(mortiTotali) >= Integer.parseInt(conducentiMortiDa0_14)
+        try {
+            return Integer.parseInt(mortiTotali) >= Integer.parseInt(conducentiMortiDa0_14)
                 + Integer.parseInt(conducentiMortiDa15_19)
                 + Integer.parseInt(conducentiMortiDa20_64)
                 + Integer.parseInt(conducentiMortiDa65_piu)
                 + Integer.parseInt(passeggeriMorti)
                 + Integer.parseInt(pedoniMorti);
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     private static boolean verificaVeicoliConConducente(String veicoliConConducente, String autovetture, String autocarri, String motocicli, String velocipedi) {
-        return Integer.parseInt(veicoliConConducente) >= Integer.parseInt(autovetture)
+        try {
+            return Integer.parseInt(veicoliConConducente) >= Integer.parseInt(autovetture)
                 + Integer.parseInt(autocarri)
                 + Integer.parseInt(motocicli)
                 + Integer.parseInt(velocipedi);
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     private static boolean verificaConducentiTotaliPerAnni(String incidentiTotali, String conducentiDa0_14, String conducentiDa15_19, String conducentiDa20_64, String conducentiDa65_piu) {
-        return Integer.parseInt(incidentiTotali) >= Integer.parseInt(conducentiDa0_14)
+        try {
+            return Integer.parseInt(incidentiTotali) >= Integer.parseInt(conducentiDa0_14)
                 + Integer.parseInt(conducentiDa15_19)
                 + Integer.parseInt(conducentiDa20_64)
                 + Integer.parseInt(conducentiDa65_piu);
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     private static boolean verificaConducentiFeritiPerAnni(String incidentiTotali, String conducentiFeritiDa0_14, String conducentiFeritiDa15_19, String conducentiFeritiDa20_64, String conducentiFeritiDa65_piu) {
-        return Integer.parseInt(incidentiTotali) >= Integer.parseInt(conducentiFeritiDa0_14)
+        try {
+            return Integer.parseInt(incidentiTotali) >= Integer.parseInt(conducentiFeritiDa0_14)
                 + Integer.parseInt(conducentiFeritiDa15_19)
                 + Integer.parseInt(conducentiFeritiDa20_64)
                 + Integer.parseInt(conducentiFeritiDa65_piu);
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 }
