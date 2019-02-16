@@ -150,6 +150,10 @@ public class MainETL implements Constants {
                 Thread.sleep(1000);
                 print("CONTROLLO RECORD\n");
             }
+            if (stampaLog) {
+                        streamLogFile.write("<details>\n" +
+                            "  <summary>Clicca per visualizzare l'elenco delle tuple mancanti</summary>");
+                    }
             while (stramSourceFile.hasNextLine()) {
                 rigaSourceFile = stramSourceFile.nextLine();
                 String[] campiRigaAnalizzata = rigaSourceFile.split(SEPARATOR);
@@ -186,7 +190,7 @@ public class MainETL implements Constants {
                     } else { //record inconsistente per qualche controllo non andato a buon fine
                         //outStream.write(record.toString() + "\r\n");
                         if (stampaLog) {
-                            streamLogFile.write("<li>" + record.toString() + "</li>");
+                            streamLogFile.write("<li>" + record.toString() + "</li><br>");
                         }
                         errati++;
                     }
@@ -200,6 +204,10 @@ public class MainETL implements Constants {
                     }
                 }
             }
+            
+            if (stampaLog) {
+                        streamLogFile.write("</details>");
+                    }
 
             //scansione delle righe del file terminata, chiusura degli stream
             writerTempFile.close();

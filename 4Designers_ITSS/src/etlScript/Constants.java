@@ -22,7 +22,7 @@ public interface Constants {
 
     static final String REPORT_MESSAGE = "PROCEDURA ETL TERMINATA<br>DATA : ";
     static final String ERROR_MESSAGE = "ERRORI : ";
-    static final String MISSINGS_MESSAGE = "RECORD MANCANTI : ";
+    static final String MISSINGS_MESSAGE = "Record mancanti per anno: ";
     static final String HEADER_ERROR = "Intestazione di " + PATH_DATA_FROM_OLTP_FILE + " errata";
     static final String SEPARATOR = ";";
     static final int N_COLONNE = 55;

@@ -531,7 +531,14 @@ public class Record {
 
     @Override
     public String toString() {
-        return "Record{" + "riga=" + idRecord + ", errori=" + erroriRecord + ", warnings=" + warningsRecord + '}';
+        String stringa="Record{"+annoIncidente+","+comune+", ("+prov+")}<br>riga("+idRecord+")";
+        if (erroriRecord.size()>0){
+            stringa+=",\t errori=" + erroriRecord;
+        }
+        if(warningsRecord.size()>0){
+            stringa+=",\t warnings=" + warningsRecord;
+        }
+        return  stringa;
     }
 
     static boolean verificaAnnoIncidente(String annoIncidente) {
